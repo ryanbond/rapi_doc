@@ -39,7 +39,7 @@ class RAPIDoc
   end
 
   def move_structure!
-    target_folder = "#{RAILS_ROOT}/public/apidoc/"
+    target_folder = "#{::Rails.root.to_s}/public/apidoc/"
 
     if (!File.directory?(target_folder))
       Dir.mkdir(target_folder)

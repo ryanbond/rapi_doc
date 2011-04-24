@@ -1,10 +1,10 @@
-require File.dirname(__FILE__) + '/../lib/rapi_doc.rb'
+require File.dirname(__FILE__) + '/../../lib/rapi_doc.rb'
 
 desc "Generate the API Documentation"
 task :rapi_doc do
 
   begin
-    yml = YAML::load(File.open("#{RAILS_ROOT}/config/documentation.yml"))
+    yml = YAML::load(File.open("#{::Rails.root.to_s}/config/documentation.yml"))
   rescue
     puts "Please ensure that you have created a documentation.yml file in your config directory"
   end
