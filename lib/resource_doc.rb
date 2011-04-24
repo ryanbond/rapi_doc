@@ -28,7 +28,7 @@ class ResourceDoc
   
   # returns the location of the controller that is to be parsed
   def controller_location
-    "#{Rails.root.to_s}/app/controllers/#{controller_name}"
+    "#{::Rails.root.to_s}/app/controllers/#{controller_name}"
   end
   
   def get_binding
@@ -46,6 +46,10 @@ class ResourceDoc
     File.open(controller_location).each do |line|
         if line =~ /=begin apidoc/
           current_scope = !inclass ? :class : :function
+          puts "-"*30
+          puts ">>> found: =begin apidoc"
+          puts "#{current_scope}"
+          puts "-"*30; puts ""
           current_api_block = MethodDoc.new(current_scope)
         elsif line =~ /=end/
           if current_api_block.nil? 
@@ -53,6 +57,12 @@ class ResourceDoc
             exit
           elsif current_api_block.scope == :class
             @class_block = current_api_block
+
+            puts "-"*30
+            puts ">>> current_api_block.scope == :class"
+            puts "#{@class_block}"
+            puts "-"*30; puts ""
+
           elsif current_api_block.scope == :function
             @function_blocks << current_api_block
           end
@@ -60,13 +70,40 @@ class ResourceDoc
           current_scope = :none
         elsif line =~ /class/
           inclass=true
+          puts "-"*30
+          puts ">>> found class"
+          puts "#{current_scope}"
+          puts "-"*30; puts ""
+        elsif line =~ /::response-end::/
+          current_scope = :function
+        elsif line =~ /::request-end::/
+          current_scope = :function
+        elsif current_scope == :response
+          current_api_block.response += "#{line}"
+        elsif current_scope == :request
+          current_api_block.request += "#{line}"
         elsif current_scope == :class || current_scope == :function # check if we are looking at a api block
           # strip the # on the line
           #line = line[1..line.length].lstrip.rstrip
           # check if we are dealing with a variable
           # something in the format: # varname:: sometext
           if result = /(\w+)\:\:\s*(.+)/.match(line)
-            current_api_block.add_variable(result[1], result[2])
+            puts "calling current_api_block.add_variable()"
+            if result[1] == "response"
+              puts "="*30
+              puts "found response"
+              puts "="*30; puts ""
+              puts line
+              current_scope = :response
+            elsif result[1] == "request"
+              puts "="*30
+              puts "found request"
+              puts line
+              puts "="*30; puts ""
+              current_scope = :request
+            else
+              current_api_block.add_variable(result[1], result[2])
+            end
           else
             # add line to block
             current_api_block.content << line
@@ -91,14 +128,22 @@ class ResourceDoc
      File.open(File.join(File.dirname(__FILE__), '..', 'structure', 'views', 'apidoc', name + ".html"), 'w') { |file| file.write parsed }
      
   end
-    
+
+
   def get_parsed_header
+    
     template = ""
     File.open(File.join(File.dirname(__FILE__), '..', 'templates', '_resource_header.html.erb.erb')).each { |line| template << line }
+
+    puts "-"*30
+    puts ">>> inside: get_parsed_header"
+    puts ERB.new(template).result(@class_block.get_binding)
+    puts "-"*30; puts ""
+
     return ERB.new(template).result(@class_block.get_binding)
   end
-  
-  
+
+
   def get_parsed_method(method_block)
     template = ""
     File.open(File.join(File.dirname(__FILE__), '..', 'templates', '_resource_method.html.erb.erb')).each { |line| template << line }
@@ -106,7 +151,3 @@ class ResourceDoc
   end
     
 end
-
-
-
-

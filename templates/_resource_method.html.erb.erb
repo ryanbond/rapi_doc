@@ -1,4 +1,4 @@
-<div style="padding:30px; padding-top:0px;border-bottom:1px solid #ddd;">
+<div style="padding:30px; padding-top:30px;border-bottom:1px solid #ddd;">
   
   <%
     splitted = @method
@@ -7,11 +7,13 @@
   %>
   <h2><%=str %><%=@url %></h2>
   
-  
-  <strong>Access:</strong> <%=@access %><br />
+  <% if @access %>
+    <strong>Access:</strong> <%=@access %><br />
+  <% end %>
+
   <% if @return %>
-  <strong>Return:</strong><%
-  rep, desc = @return.split("-")
+    <strong>Return:</strong><%
+    rep, desc = @return.split("-")
   %>
   <% is_list = rep =~ /\[(.)+\]/ %>
   
@@ -26,17 +28,28 @@
   <% if rep.downcase =~ /xml/ %>
     <a href="#xml"  onclick="$('xmlrep').show();">XML</a>
   <% end %>
-  
   -
   <%=desc %>
   <br />
   <% end %>
-  
-  <strong>Parameters:</strong>
-  <ul>
-  <% @variables.each do |v| %><li><%=v %></li><% end %>
-  </ul>
+
+  <% if @variables %>  
+    <strong>Parameters:</strong>
+    <ul>
+      <% @variables.each do |v| %><li><%=v %></li><% end %>
+    </ul>
+  <% end %>
+
+  <% unless @request.blank? %>
+    <strong>Request:</strong>
+    <pre class="code"><code><%= @request %></code></pre>
+  <% end %>
+
+  <% unless @response.blank? %>  
+    <strong>Response:</strong>
+    <pre class="code"><code><%= @response %></code></pre>
+  <% end %>
+
   <p><strong>Description:</strong> <%=@content %></p>
+
 </div>
-
-

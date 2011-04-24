@@ -1,7 +1,33 @@
-<a href="/apidoc">&laquo; Back to index</a>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
 
-<%=@header_code %>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title><%= @name || 'Home' %></title>
+    <link rel="stylesheet" href="/flutie/stylesheets/flutie.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="/stylesheets/application.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="/apidoc/apidoc.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    <script src="/javascripts/jquery.js" type="text/javascript"></script>
+    <meta name="csrf-param" content="authenticity_token"/>
+    <meta name="csrf-token" content="p6uzhfOCq2+vYbh0Qu/vyVLqMrjdMPzSTxa+J4rv+tw="/>
 
-<% @method_codes.each do |mc| %>
-  <%=mc %>
-<% end %>
+  </head>
+  <body>
+    <div class="content">
+      <%=@header_code %>
+      <div id="navigation"> 
+        <ul class="main">
+          <li><a href="/apidoc/index.html">&laquo; Back to index</a></li>
+        </ul>
+      </div>
+
+      <hr />
+
+
+      <% @method_codes.each do |mc| %>
+        <%=mc %>
+      <% end %>
+    </div>
+  </body>
+</html>

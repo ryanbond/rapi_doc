@@ -23,6 +23,7 @@ class RAPIDoc
       r.generate_view!(@resources)
     end
     generate_index!
+    copy_styles!
   end
 
   # generate the index file for the api views
@@ -46,7 +47,7 @@ class RAPIDoc
     end
 
     Dir.new(File.join(File.dirname(__FILE__), '..', '/structure/views/apidoc/')).each do |d|
-      if d =~ /^[a-zA-Z]+\.html$/ # Only want to copy over the .html files, not the .erb templates
+      if d =~ /^[a-zA-Z]+\.(html|css)$/ # Only want to copy over the .html files, not the .erb templates
         FileUtils.cp  File.join(File.dirname(__FILE__), '..', '/structure/views/apidoc/' + d), target_folder + d
       end
 
@@ -54,9 +55,14 @@ class RAPIDoc
       filepath = "#{File.dirname(__FILE__)}/../structure/views/apidoc/#{d}"
       File.delete(filepath) unless File.directory?(filepath)
     end
-
-
   end
 
+  def copy_styles!
+    Dir[File.join(File.dirname(__FILE__), '..', 'templates/*')].each do |f|
+      puts f 
+      if f =~ /[\/a-zA-Z\.]+\.css$/i
+        FileUtils.cp f, File.join(File.dirname(__FILE__), '..', '/structure/views/apidoc/')
+      end
+    end
+  end
 end
-
