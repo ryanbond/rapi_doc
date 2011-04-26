@@ -9,8 +9,6 @@
     <link rel="stylesheet" href="/stylesheets/application.css" type="text/css" media="screen" title="no title" charset="utf-8">
     <link rel="stylesheet" href="/apidoc/apidoc.css" type="text/css" media="screen" title="no title" charset="utf-8">
     <script src="/javascripts/jquery.js" type="text/javascript"></script>
-    <meta name="csrf-param" content="authenticity_token"/>
-    <meta name="csrf-token" content="p6uzhfOCq2+vYbh0Qu/vyVLqMrjdMPzSTxa+J4rv+tw="/>
 
   </head>
   <body>
@@ -20,16 +18,34 @@
 
       <hr/>
 
-      <h2>PostGIS Provisioning API</h2>
+      <h2>SpacialDB Management API</h2>
+      <div id="introduction">
+      <p>
+        The goal of the <strong>SpacialDB Management API</strong> is two fold.
+        Firstly for managing your <strong>geospatial database</strong> by performing the following operations on your database via a RESTful API:
+        <ul>
+          <li>creating</li>
+          <li>listing</li>
+          <li>deleting</li>
+        </ul>
 
-      <p>This API is based on a RESTful approach.</p>
+        Secondly for managing your <strong>user account</strong> by performing the following operations via a RESTful API:
+        <ul>
+          <li>sign up</li>
+          <li>login</li>
+        </ul>
+      </p>
+      </div>
 
       <h2>Resources</h2>
-      <ul>
-      <% @resources.each do |r| %>
-        <li><h3>Resource:  <a href="/apidoc/<%=r.name %>.html"><%=r.resource_location %></a></h3></li>
-      <% end %>
-      </ul>
+      <div id="resources">
+        <ul>
+        <% @resources.each do |r| %>
+          <li>Resource:  <a href="/apidoc/<%=r.name %>.html"><%=r.resource_location %></a></li>
+        <% end %>
+        </ul>
+      </div>
+
     </div>
   </body>
 </html>

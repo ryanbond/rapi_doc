@@ -1,10 +1,12 @@
-<div style="padding:30px; padding-top:30px;border-bottom:1px solid #ddd;">
+<div id="method">
   
   <%
     splitted = @method
     str = @method
-    str = "<span style='color:#ff6600; width:200px;margin-right:20px;'>#{str}</span>"
+    str = "<span id='http_verb'>#{str}</span>"
   %>
+  <p class='description'><strong>Description:</strong> <%=@content %></p>
+
   <h2><%=str %><%=@url %></h2>
   
   <% if @access %>
@@ -12,25 +14,9 @@
   <% end %>
 
   <% if @return %>
-    <strong>Return:</strong><%
-    rep, desc = @return.split("-")
-  %>
-  <% is_list = rep =~ /\[(.)+\]/ %>
-  
-  <% if is_list %>
-    a list of
-    <% end %>
-     
-  <% if rep.downcase =~ /json/ %>
-    <a href="#json" onclick="$('jsonrep').show();">JSON</a>
-  <% end %>
-  
-  <% if rep.downcase =~ /xml/ %>
-    <a href="#xml"  onclick="$('xmlrep').show();">XML</a>
-  <% end %>
-  -
-  <%=desc %>
-  <br />
+    <strong>Return:</strong>
+    <%=@return %>
+    <br />
   <% end %>
 
   <% if @variables %>  
@@ -49,7 +35,5 @@
     <strong>Response:</strong>
     <pre class="code"><code><%= @response %></code></pre>
   <% end %>
-
-  <p><strong>Description:</strong> <%=@content %></p>
 
 </div>

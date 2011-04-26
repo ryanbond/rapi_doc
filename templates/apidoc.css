@@ -1,9 +1,38 @@
 body {
   line-height: 1.5em;
+  color:#484848;
 }
 
 ul, ol {
   margin-bottom: 0.8em;
 }
 
-li { margin-left: 10px; }
+li { 
+  padding-left: 10px;
+  margin-right: 10px;
+}
+
+#resources {
+
+}
+
+h1, h2, h3 {
+  padding-top: 8px;
+  padding-bottom: 2px;
+}
+
+#method {
+  padding: 15px 30px;
+  border-top:1px solid #ddd;
+}
+
+#http_verb {
+  color:#ff6600;
+  width:200px;
+  margin-right:20px;'
+}
+
+.description{
+  font-size: 1.4em;
+  color:#262626;
+}
