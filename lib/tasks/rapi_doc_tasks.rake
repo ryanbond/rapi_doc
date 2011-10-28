@@ -5,9 +5,12 @@ desc "Generate the API Documentation"
 task :rapi_doc do
 
   begin
-    yml = YAML::load(File.open("#{::Rails.root.to_s}/config/documentation.yml"))
-    configatron.configure_from_yaml "#{::Rails.root}/config/config.yml", :hash => Rails.env
+    target_dir = "#{::Rails.root.to_s}/config/rapi_doc"
+    yml = YAML::load(File.open("#{target_dir}/config.yml"))
   rescue
+    puts "Can't find the configuration file. Generating that for you.."
+    template_dir = File.dirname(__FILE__) + '/../../templates'
+    FileUtils.cp "#{template_dir}/config.yml", target_dir
     puts "Please ensure that you have created a documentation.yml file in your config directory"
   end
   if yml
