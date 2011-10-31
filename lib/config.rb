@@ -7,19 +7,19 @@ module Config
     File.join(File.dirname(__FILE__), '/../templates')
   end
 
-  def target_config_file
-    File.join(config_dir,   'config.yml')
+  def config_file(location)
+    File.join(find_location(location), 'config.yml')
   end
 
-  def template_config_file
-    File.join(template_dir, 'config.yml')
+  def index_layout_file(location)
+    File.join(find_location(location), 'index.html.erb')
   end
 
-  def index_layout_file
-    File.join(config_dir, 'index.html.erb')
+  def resource_layout_file(location)
+    File.join(find_location(location), 'resource.html.erb')
   end
 
-  def resource_layout_file
-    File.join(config_dir, 'resource.html.erb')
+  def find_location(location)
+    location == :target ? config_dir : template_dir
   end
 end

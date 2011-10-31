@@ -102,7 +102,7 @@ class ResourceDoc
      end
      # write it to a file
      template = ""
-     File.open(resource_layout_file).each { |line| template << line }
+     File.open(resource_layout_file(:target)).each { |line| template << line }
      parsed = ERB.new(template).result(binding)
      File.open(File.join(File.dirname(__FILE__), '..', 'structure', 'views', 'apidoc', name + ".html"), 'w') { |file| file.write parsed }
   end
