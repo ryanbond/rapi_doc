@@ -16,7 +16,7 @@ class ResourceDoc
     @header_code = ""
     
     unless File.exist?(controller_location)
-      raise "Unable to find or open controller. File: #{controller_location}"
+      raise "Unable to find or open controller. Make sure it's set properly in config/rapidoc/config.yml File: #{controller_location}"
     end
   end
   
@@ -44,72 +44,66 @@ class ResourceDoc
     inclass = false
     
     File.open(controller_location).each do |line|
-        if line =~ /=begin apidoc/
-          current_scope = !inclass ? :class : :function
-          puts "-"*30
-          puts ">>> found: =begin apidoc"
-          puts "#{current_scope}"
-          puts "-"*30; puts ""
-          current_api_block = MethodDoc.new(current_scope)
-        elsif line =~ /=end/
-          if current_api_block.nil? 
-            puts "#{controller_location}:#{lineno} - No starttag for =end found"
-            exit
-          elsif current_api_block.scope == :class
-            @class_block = current_api_block
+      if line =~ /=begin apidoc/
+        current_scope = !inclass ? :class : :function
+        puts "-"*30
+        puts ">>> found: =begin apidoc"
+        puts "scope: #{current_scope}"
+        puts "-"*30; puts ""
+        current_api_block = MethodDoc.new(current_scope)
+      elsif line =~ /=end/
+        if current_api_block.nil?
+          puts "#{controller_location}:#{lineno} - No starttag for =end found"
+          exit
+        elsif current_api_block.scope == :class
+          @class_block = current_api_block
 
-            puts "-"*30
-            puts ">>> current_api_block.scope == :class"
-            puts "#{@class_block}"
-            puts "-"*30; puts ""
-
-          elsif current_api_block.scope == :function
-            @function_blocks << current_api_block
-          end
-          current_api_block = nil
-          current_scope = :none
-        elsif line =~ /class/
-          inclass=true
           puts "-"*30
-          puts ">>> found class"
-          puts "#{current_scope}"
+          puts ">>> current_api_block.scope == :class"
+          puts "#{@class_block}"
           puts "-"*30; puts ""
-        elsif line =~ /::response-end::/
-          current_scope = :function
-        elsif line =~ /::request-end::/
-          current_scope = :function
-        elsif current_scope == :response
-          current_api_block.response += "#{line}"
-        elsif current_scope == :request
-          current_api_block.request += "#{line}"
-        elsif current_scope == :class || current_scope == :function # check if we are looking at a api block
-          # strip the # on the line
-          #line = line[1..line.length].lstrip.rstrip
-          # check if we are dealing with a variable
-          # something in the format: # varname:: sometext
-          if result = /(\w+)\:\:\s*(.+)/.match(line)
-            puts "calling current_api_block.add_variable()"
-            if result[1] == "response"
-              puts "="*30
-              puts "found response"
-              puts "="*30; puts ""
-              puts line
-              current_scope = :response
-            elsif result[1] == "request"
-              puts "="*30
-              puts "found request"
-              puts line
-              puts "="*30; puts ""
-              current_scope = :request
-            else
-              current_api_block.add_variable(result[1], result[2])
-            end
-          else
-            # add line to block
-            current_api_block.content << line
-          end
+
+        elsif current_api_block.scope == :function
+          @function_blocks << current_api_block
         end
-        lineno += 1
+        current_api_block = nil
+        current_scope = :none
+      elsif line =~ /class/
+        inclass=true
+        puts "-"*30
+        puts ">>> found class"
+        puts "scope: #{current_scope}"
+        puts "-"*30; puts ""
+      elsif line =~ /::response-end::/
+        current_scope = :function
+      elsif line =~ /::request-end::/
+        current_scope = :function
+      elsif current_scope == :response
+        current_api_block.response += "#{line}"
+      elsif current_scope == :request
+        current_api_block.request += "#{line}"
+      elsif current_scope == :class || current_scope == :function # check if we are looking at a api block
+        # strip the # on the line
+        #line = line[1..line.length].lstrip.rstrip
+        # check if we are dealing with a variable
+        # something in the format: # varname:: sometext
+        if result = /(\w+)\:\:\s*(.+)/.match(line)
+          puts "calling current_api_block.add_variable()"
+          if result[1] == "response" || result[1] == "request"
+            puts "="*30
+            puts "found response"
+            puts "="*30; puts ""
+            puts line
+            current_scope = result[1].to_sym
+          else
+            current_api_block.add_variable(result[1], result[2])
+          end
+        else
+          # add line to block
+          current_api_block.content << line
+        end
+      end
+      lineno += 1
     end
 
     puts "Documented #{name}"

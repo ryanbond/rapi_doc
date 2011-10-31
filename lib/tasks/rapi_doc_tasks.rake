@@ -1,4 +1,3 @@
-require 'configatron'
 require File.dirname(__FILE__) + '/../../lib/rapi_doc.rb'
 
 desc "Generate the API Documentation"
