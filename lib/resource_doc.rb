@@ -20,12 +20,6 @@ class ResourceDoc
     end
   end
   
-  
-  # gets the name it is generated to
-  def template_file_name
-    File.join(['structure', "views", "#{controller_name}.html"])
-  end
-  
   # returns the location of the controller that is to be parsed
   def controller_location
     "#{::Rails.root.to_s}/app/controllers/#{controller_name}"
@@ -94,7 +88,7 @@ class ResourceDoc
     puts "Generated #{name}.html"
   end
   
-  def generate_view!(resources)
+  def generate_view!(resources, temp_dir)
      @resources = resources
      @header_code = get_parsed_header unless @class_block.nil?
      function_blocks.each do |mb|
@@ -104,7 +98,7 @@ class ResourceDoc
      template = ""
      File.open(resource_layout_file(:target)).each { |line| template << line }
      parsed = ERB.new(template).result(binding)
-     File.open(File.join(File.dirname(__FILE__), '..', 'structure', 'views', 'apidoc', name + ".html"), 'w') { |file| file.write parsed }
+     File.open(File.join(temp_dir, name + ".html"), 'w') { |file| file.write parsed }
   end
 
 

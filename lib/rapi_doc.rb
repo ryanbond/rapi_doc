@@ -24,7 +24,7 @@ class RAPIDoc
 
     @resources.each do |r|
       r.parse_apidoc!
-      r.generate_view!(@resources)
+      r.generate_view!(@resources, temp_dir)
     end
     generate_index!
     copy_styles!
@@ -64,6 +64,6 @@ class RAPIDoc
   private
 
   def temp_dir
-    @temp_dir ||= Dir.mktmpdir("apidoc")
+    @temp_dir ||= "#{Dir.mktmpdir("apidoc")}/"
   end
 end
