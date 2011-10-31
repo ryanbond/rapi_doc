@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/method_doc.rb'
+require 'method_doc'
 
 # ResourceDoc holds the information a resource contains. It parses the class header and also the 
 # method documentation, which will be contained in MethodDoc.

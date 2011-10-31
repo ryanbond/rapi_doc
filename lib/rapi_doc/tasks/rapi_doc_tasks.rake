@@ -1,8 +1,5 @@
-require File.dirname(__FILE__) + '/../../lib/rapi_doc.rb'
-
 desc "Generate the API Documentation"
 task :rapi_doc do
-
   begin
     yml = YAML::load(File.open(target_config_file))
   rescue

@@ -1,8 +1,10 @@
 require 'erb'
 require 'fileutils'
-require File.dirname(__FILE__) + '/doc_util.rb'
-require File.dirname(__FILE__) + '/resource_doc.rb'
-require File.dirname(__FILE__) + '/config'
+require 'doc_util'
+require 'resource_doc'
+require 'config'
+require 'hello'
+require 'rapi_doc/railtie' if defined?(Rails)
 
 include Config # TODO FIXME
 

@@ -3,5 +3,4 @@ class DocUtil
   def self.print_erb(str, show=false)
     (show ? "<%= " : "<% ") + str + " %>"
   end
-  
 end
