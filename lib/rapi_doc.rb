@@ -3,7 +3,6 @@ require 'fileutils'
 require 'doc_util'
 require 'resource_doc'
 require 'config'
-require 'hello'
 require 'rapi_doc/railtie' if defined?(Rails)
 
 include Config # TODO FIXME
