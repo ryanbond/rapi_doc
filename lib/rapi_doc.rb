@@ -2,7 +2,10 @@ require 'erb'
 require 'fileutils'
 require File.dirname(__FILE__) + '/doc_util.rb'
 require File.dirname(__FILE__) + '/resource_doc.rb'
-#
+require File.dirname(__FILE__) + '/config'
+
+include Config # TODO FIXME
+
 class RAPIDoc
 
   # Initalize the ApiDocGenerator
@@ -29,14 +32,9 @@ class RAPIDoc
   # generate the index file for the api views
   def generate_index!
     template = ""
-    File.open(File.join(File.dirname(__FILE__), '..', 'templates', 'index.html.erb.erb')).each { |line| template << line }
+    File.open(index_layout_file).each { |line| template << line }
     parsed = ERB.new(template).result(binding)
     File.open(File.join(File.dirname(__FILE__), '..', 'structure', 'views', 'apidoc',"index.html"), 'w') { |file| file.write parsed }
-  end
-
-  # TODO
-  def make_backups!
-    puts "TODO"
   end
 
   def move_structure!
@@ -59,7 +57,6 @@ class RAPIDoc
 
   def copy_styles!
     Dir[File.join(File.dirname(__FILE__), '..', 'templates/*')].each do |f|
-      puts f 
       if f =~ /[\/a-zA-Z\.]+\.css$/i
         FileUtils.cp f, File.join(File.dirname(__FILE__), '..', '/structure/views/apidoc/')
       end

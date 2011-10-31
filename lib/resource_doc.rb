@@ -46,10 +46,6 @@ class ResourceDoc
     File.open(controller_location).each do |line|
       if line =~ /=begin apidoc/
         current_scope = !inclass ? :class : :function
-        puts "-"*30
-        puts ">>> found: =begin apidoc"
-        puts "scope: #{current_scope}"
-        puts "-"*30; puts ""
         current_api_block = MethodDoc.new(current_scope)
       elsif line =~ /=end/
         if current_api_block.nil?
@@ -57,23 +53,13 @@ class ResourceDoc
           exit
         elsif current_api_block.scope == :class
           @class_block = current_api_block
-
-          puts "-"*30
-          puts ">>> current_api_block.scope == :class"
-          puts "#{@class_block}"
-          puts "-"*30; puts ""
-
         elsif current_api_block.scope == :function
           @function_blocks << current_api_block
         end
         current_api_block = nil
         current_scope = :none
       elsif line =~ /class/
-        inclass=true
-        puts "-"*30
-        puts ">>> found class"
-        puts "scope: #{current_scope}"
-        puts "-"*30; puts ""
+        inclass = true
       elsif line =~ /::response-end::/
         current_scope = :function
       elsif line =~ /::request-end::/
@@ -88,7 +74,6 @@ class ResourceDoc
         # check if we are dealing with a variable
         # something in the format: # varname:: sometext
         if result = /(\w+)\:\:\s*(.+)/.match(line)
-          puts "calling current_api_block.add_variable()"
           if result[1] == "response" || result[1] == "request"
             puts "="*30
             puts "found response"
@@ -106,7 +91,7 @@ class ResourceDoc
       lineno += 1
     end
 
-    puts "Documented #{name}"
+    puts "Generated #{name}.html"
   end
   
   def generate_view!(resources)
@@ -117,17 +102,15 @@ class ResourceDoc
      end
      # write it to a file
      template = ""
-     File.open(File.join(File.dirname(__FILE__), '..', 'templates', 'resource.html.erb.erb')).each { |line| template << line }
+     File.open(resource_layout_file).each { |line| template << line }
      parsed = ERB.new(template).result(binding)
      File.open(File.join(File.dirname(__FILE__), '..', 'structure', 'views', 'apidoc', name + ".html"), 'w') { |file| file.write parsed }
-     
   end
 
 
   def get_parsed_header
-    
     template = ""
-    File.open(File.join(File.dirname(__FILE__), '..', 'templates', '_resource_header.html.erb.erb')).each { |line| template << line }
+    File.open(File.join(File.dirname(__FILE__), '..', 'templates', '_resource_header.html.erb')).each { |line| template << line }
 
     puts "-"*30
     puts ">>> inside: get_parsed_header"
@@ -140,7 +123,7 @@ class ResourceDoc
 
   def get_parsed_method(method_block)
     template = ""
-    File.open(File.join(File.dirname(__FILE__), '..', 'templates', '_resource_method.html.erb.erb')).each { |line| template << line }
+    File.open(File.join(File.dirname(__FILE__), '..', 'templates', '_resource_method.html.erb')).each { |line| template << line }
     return ERB.new(template).result(method_block.get_binding)
   end
     

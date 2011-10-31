@@ -9,17 +9,18 @@ It generates a set of HTML views in the public directory.  Parses the desired co
 Currently does not read routes.rb and requires manual entry of routes
 
 =INSTALL
-    script/plugin install git://github.com/fmiopensource/rapi_doc
+    gem install rapi_doc
 
-==Templates
-Templates can be used for tuning your method generation and index.html.erb.
+==Layout files
+You can find documentation layouts in config/rapi_doc
 
-==Structure
-In the structure folder one can setup some additional views to be used for the apidoc controller generator.
+index.html.erb is used for index page.
+resource.html.erb is used for individual controllers.
 
 ==Usage
-Create a documentation.yml inside your config directory.  In this config file specify the controllers you wish to
-generate documentation for in the following format:
+Run 'rake rapi_doc' to generate config and layout files. (TODO: Add a separte rake task to generate config files)
+Modify config file by adding your controllers, e.g.:
+
 users:
   location: "/users"
   controller_name: "users_controller.rb"
@@ -40,6 +41,3 @@ param:: per_page:int - max items per page, default is 10
 Get a list of all users in the system with pagination.  Defaults to 10 per page
 =end
 
-=======================
-TODO  - Make class documentation work
-      - Write tests and make them work
