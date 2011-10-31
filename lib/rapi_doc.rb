@@ -35,23 +35,20 @@ class RAPIDoc
     template = ""
     File.open(index_layout_file(:target)).each { |line| template << line }
     parsed = ERB.new(template).result(binding)
-    File.open(File.join(File.dirname(__FILE__), '..', 'structure', 'views', 'apidoc',"index.html"), 'w') { |file| file.write parsed }
+    File.open(File.join(temp_dir, "index.html"), 'w') { |file| file.write parsed }
   end
 
   def move_structure!
     target_folder = "#{::Rails.root.to_s}/public/apidoc/"
+    Dir.mkdir(target_folder) if (!File.directory?(target_folder))
 
-    if (!File.directory?(target_folder))
-      Dir.mkdir(target_folder)
-    end
-
-    Dir.new(File.join(File.dirname(__FILE__), '..', '/structure/views/apidoc/')).each do |d|
+    Dir.new(temp_dir).each do |d|
       if d =~ /^[a-zA-Z]+\.(html|css)$/ # Only want to copy over the .html files, not the .erb templates
-        FileUtils.cp  File.join(File.dirname(__FILE__), '..', '/structure/views/apidoc/' + d), target_folder + d
+        FileUtils.cp  File.join(temp_dir + d), target_folder + d
       end
 
       #Clean up the no longer needed files
-      filepath = "#{File.dirname(__FILE__)}/../structure/views/apidoc/#{d}"
+      filepath = "#{temp_dir}/#{d}"
       File.delete(filepath) unless File.directory?(filepath)
     end
   end
@@ -59,8 +56,14 @@ class RAPIDoc
   def copy_styles!
     Dir[File.join(File.dirname(__FILE__), '..', 'templates/*')].each do |f|
       if f =~ /[\/a-zA-Z\.]+\.css$/i
-        FileUtils.cp f, File.join(File.dirname(__FILE__), '..', '/structure/views/apidoc/')
+        FileUtils.cp f, temp_dir
       end
     end
+  end
+
+  private
+
+  def temp_dir
+    @temp_dir ||= Dir.mktmpdir("apidoc")
   end
 end
