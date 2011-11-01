@@ -85,7 +85,7 @@ class ResourceDoc
       lineno += 1
     end
 
-    puts "Generated #{name}.html"
+    puts "Generating #{name}.html"
   end
   
   def generate_view!(resources, temp_dir)
@@ -96,7 +96,7 @@ class ResourceDoc
      end
      # write it to a file
      template = ""
-     File.open(resource_layout_file(:target)).each { |line| template << line }
+     File.open(layout_file(:target)).each { |line| template << line }
      parsed = ERB.new(template).result(binding)
      File.open(File.join(temp_dir, name + ".html"), 'w') { |file| file.write parsed }
   end
@@ -106,12 +106,7 @@ class ResourceDoc
     template = ""
     File.open(File.join(File.dirname(__FILE__), '..', 'templates', '_resource_header.html.erb')).each { |line| template << line }
 
-    puts "-"*30
-    puts ">>> inside: get_parsed_header"
     puts ERB.new(template).result(@class_block.get_binding)
-    puts "-"*30; puts ""
-
-    return ERB.new(template).result(@class_block.get_binding)
   end
 
 

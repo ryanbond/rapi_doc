@@ -33,7 +33,8 @@ class RAPIDoc
   # generate the index file for the api views
   def generate_index!
     template = ""
-    File.open(index_layout_file(:target)).each { |line| template << line }
+    @page_type = 'index'
+    File.open(layout_file(:target)).each { |line| template << line }
     parsed = ERB.new(template).result(binding)
     File.open(File.join(temp_dir, "index.html"), 'w') { |file| file.write parsed }
   end
