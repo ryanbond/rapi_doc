@@ -2,12 +2,12 @@ require 'erb'
 require 'fileutils'
 require 'doc_util'
 require 'resource_doc'
-require 'config'
+require 'rapi_config'
 require 'rapi_doc/railtie' if defined?(Rails)
 
 module RapiDoc
 
-  include RapiDoc::RapiConfig
+  include RapiConfig
 
   class RAPIDoc
 
