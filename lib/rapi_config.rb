@@ -12,12 +12,8 @@ module RapiDoc
       File.join(find_location(location), 'config.yml')
     end
 
-    def index_layout_file(location)
-      File.join(find_location(location), 'index.html.erb')
-    end
-
-    def resource_layout_file(location)
-      File.join(find_location(location), 'resource.html.erb')
+    def layout_file(location)
+      File.join(find_location(location), 'layout.html.erb')
     end
 
     def find_location(location)

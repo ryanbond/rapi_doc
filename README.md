@@ -43,13 +43,10 @@ Documentation Example
     Get a list of all users in the system with pagination.  Defaults to 10 per page
     =end
     
-Layouts
--------
+Layout
+------
 
-You can find documentation layouts in config/rapi_doc
-
-* `index.html.erb` is used for index page.
-* `resource.html.erb` is used for individual controllers.    
+Documentation layout is located at `config/rapi_doc/layout.html.erb`.
 
 Credit
 ======

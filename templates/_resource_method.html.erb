@@ -26,6 +26,14 @@
     </ul>
   <% end %>
 
+  <% if @output %>
+      <strong>Output:</strong>
+      <div class="code">
+        <%= @output %>
+      </div>
+      <br />
+  <% end %>
+
   <% unless @request.blank? %>
     <strong>Request:</strong>
     <pre class="code"><code><%= @request %></code></pre>

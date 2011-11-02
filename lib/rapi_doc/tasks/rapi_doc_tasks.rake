@@ -6,7 +6,7 @@ task :rapi_doc do
     yml = YAML::load(File.open(config_file(:target)))
   rescue
     FileUtils.mkdir(config_dir) if (!File.directory?(config_dir))
-    [config_file(:template), index_layout_file(:template), resource_layout_file(:template)].each do |_file|
+    [config_file(:template), layout_file(:template)].each do |_file|
       FileUtils.cp _file, config_dir
       puts "Generated config/rapi_doc/#{File.basename(_file)}" # TODO Add instructions for users to update the config file
     end
@@ -16,11 +16,11 @@ task :rapi_doc do
   if yml
     resources = []
     yml.keys.each do |key|
-      resources << ResourceDoc.new(key, yml[key]["location"], yml[key]["controller_name"])
+      resources << RapiDoc::ResourceDoc.new(key, yml[key]["location"], yml[key]["controller_name"])
     end
 
     # generate the apidoc
-    RAPIDoc.new(resources)
+    RapiDoc::RAPIDoc.new(resources)
   end
 end
 
