@@ -6,10 +6,9 @@ require 'rapi_config'
 require 'rapi_doc/railtie' if defined?(Rails)
 
 module RapiDoc
-
-  include RapiConfig
-
   class RAPIDoc
+
+    include RapiConfig
 
     # Initalize the ApiDocGenerator
     def initialize(resources)

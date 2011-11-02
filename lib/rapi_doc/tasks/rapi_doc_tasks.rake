@@ -1,3 +1,5 @@
+include RapiDoc::RapiConfig
+
 desc "Generate the API Documentation"
 task :rapi_doc do
   begin
