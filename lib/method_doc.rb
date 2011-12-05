@@ -6,6 +6,7 @@ module RapiDoc
     def initialize(type)
       @scope = type
       @variables = []
+      @outputs = []
       @content = ""
       @code = ""
       @request = ""
@@ -21,7 +22,19 @@ module RapiDoc
 
       eval("@#{name}= \"#{value}\"")
     end
-    
+
+    def add_output(name, value)
+      if name == 'output'
+        @outputs << eval("{#{value}: ''}")
+        return
+      end
+    end
+
+    def append_output(value)
+      last_output_key = @outputs.last.keys[0]
+      @outputs.last[last_output_key] += value
+    end
+
     def get_binding
       binding
     end

@@ -59,10 +59,14 @@ module RapiDoc
           current_scope = :function
         elsif line =~ /::request-end::/
           current_scope = :function
+        elsif line =~ /::output-end::/
+          current_scope = :function
         elsif current_scope == :response
           current_api_block.response += "#{line}"
         elsif current_scope == :request
           current_api_block.request += "#{line}"
+        elsif current_scope == :output
+          current_api_block.append_output "#{line}"
         elsif current_scope == :class || current_scope == :function # check if we are looking at a api block
           # strip the # on the line
           #line = line[1..line.length].lstrip.rstrip
@@ -70,11 +74,10 @@ module RapiDoc
           # something in the format: # varname:: sometext
           if result = /(\w+)\:\:\s*(.+)/.match(line)
             if result[1] == "response" || result[1] == "request"
-              puts "="*30
-              puts "found response"
-              puts "="*30; puts ""
-              puts line
               current_scope = result[1].to_sym
+            elsif result[1] == "output"
+              current_scope = result[1].to_sym
+              current_api_block.add_output(result[1], result[2])
             else
               current_api_block.add_variable(result[1], result[2])
             end

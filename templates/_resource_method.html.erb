@@ -26,12 +26,21 @@
     </ul>
   <% end %>
 
-  <% if @output %>
-      <strong>Output:</strong>
-      <div class="code">
-        <%= @output %>
-      </div>
-      <br />
+  <% unless @outputs.empty? %>
+    <ul class="tabs">
+      <% @outputs.each do |output| %>
+        <li class="<%= (output == @outputs.first)? 'active' : '' %>"><a href="#<%= output.keys.first %>"><%= output.keys.first %></a></li>
+      <% end %>
+    </ul>
+    <div class="pill-content">
+      <% @outputs.each do |output| %>
+        <% output_format = output.keys.first %>
+        <div class="<%= (output == @outputs.first)? 'active' : '' %>" id="<%= output_format %>">
+          <pre class="prettyprint" ><%= raw output[output_format] %></pre>
+        </div>
+      <% end %>
+    </div>
+    <br />
   <% end %>
 
   <% unless @request.blank? %>
