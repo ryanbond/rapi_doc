@@ -36,7 +36,7 @@
       <% @outputs.each do |output| %>
         <% output_format = output.keys.first %>
         <div class="<%= (output == @outputs.first)? 'active' : '' %>" id="<%= output_format %>">
-          <pre class="prettyprint" ><%= raw output[output_format] %></pre>
+          <pre class="prettyprint" ><%= output[output_format] %></pre>
         </div>
       <% end %>
     </div>

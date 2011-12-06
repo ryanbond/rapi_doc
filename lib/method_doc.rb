@@ -32,7 +32,7 @@ module RapiDoc
 
     def append_output(value)
       last_output_key = @outputs.last.keys[0]
-      @outputs.last[last_output_key] += value
+      @outputs.last[last_output_key] += ERB::Util.html_escape(value)
     end
 
     def get_binding

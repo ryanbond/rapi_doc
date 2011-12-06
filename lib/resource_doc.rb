@@ -62,11 +62,11 @@ module RapiDoc
         elsif line =~ /::output-end::/
           current_scope = :function
         elsif current_scope == :response
-          current_api_block.response += "#{line}"
+          current_api_block.response += strip_line(line)
         elsif current_scope == :request
-          current_api_block.request += "#{line}"
+          current_api_block.request += strip_line(line)
         elsif current_scope == :output
-          current_api_block.append_output "#{line}"
+          current_api_block.append_output strip_line(line)
         elsif current_scope == :class || current_scope == :function # check if we are looking at a api block
           # strip the # on the line
           #line = line[1..line.length].lstrip.rstrip
@@ -83,7 +83,7 @@ module RapiDoc
             end
           else
             # add line to block
-            current_api_block.content << line
+            current_api_block.content << strip_line(line)
           end
         end
         lineno += 1
@@ -115,6 +115,12 @@ module RapiDoc
       template = ""
       File.open(File.join(File.dirname(__FILE__), '..', 'templates', '_resource_method.html.erb')).each { |line| template << line }
       return ERB.new(template).result(method_block.get_binding)
+    end
+
+    private
+    # strip the '#' on the line
+    def strip_line(line)
+      line[1..line.length]
     end
   end
 end
