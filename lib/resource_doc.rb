@@ -1,4 +1,5 @@
 require 'method_doc'
+require 'doc_parser'
 
 module RapiDoc
   # ResourceDoc holds the information a resource contains. It parses the class header and also the 
@@ -23,6 +24,7 @@ module RapiDoc
     
     # returns the location of the controller that is to be parsed
     def controller_location
+      # @resource_location
       "#{::Rails.root.to_s}/app/controllers/#{controller_name}"
     end
     
@@ -32,66 +34,40 @@ module RapiDoc
     
     # parse the controller
     def parse_apidoc!
-      current_api_block = nil
-      current_scope = :none
-      block_holder = []
-      lineno = 0
-      inclass = false
+      line_no = 0
       
+      parser = DocParser.new
       File.open(controller_location).each do |line|
-        if line =~ /=begin apidoc/
-          current_scope = !inclass ? :class : :function
-          current_api_block = MethodDoc.new(current_scope)
-        elsif line =~ /=end/
-          if current_api_block.nil?
-            puts "#{controller_location}:#{lineno} - No starttag for =end found"
+        case
+        when line =~ /=begin apidoc/
+          parser.start
+        when line =~ /=end/
+          if parser.current_api_block.nil?
+            puts "#{controller_location}:#{line_no} - No starttag for '=end' found"
             exit
-          elsif current_api_block.scope == :class
-            @class_block = current_api_block
-          elsif current_api_block.scope == :function
-            @function_blocks << current_api_block
-          end
-          current_api_block = nil
-          current_scope = :none
-        elsif line =~ /class/
-          inclass = true
-        elsif line =~ /::response-end::/
-          current_scope = :function
-        elsif line =~ /::request-end::/
-          current_scope = :function
-        elsif line =~ /::output-end::/
-          current_scope = :function
-        elsif current_scope == :response
-          current_api_block.response += strip_line(line)
-        elsif current_scope == :request
-          current_api_block.request += strip_line(line)
-        elsif current_scope == :output
-          current_api_block.append_output strip_line(line)
-        elsif current_scope == :class || current_scope == :function # check if we are looking at a api block
-          # strip the # on the line
-          #line = line[1..line.length].lstrip.rstrip
-          # check if we are dealing with a variable
-          # something in the format: # varname:: sometext
-          if result = /(\w+)\:\:\s*(.+)/.match(line)
-            if result[1] == "response" || result[1] == "request"
-              current_scope = result[1].to_sym
-            elsif result[1] == "output"
-              current_scope = result[1].to_sym
-              current_api_block.add_output(result[1], result[2])
-            else
-              current_api_block.add_variable(result[1], result[2])
-            end
           else
-            # add line to block
-            current_api_block.content << strip_line(line)
+            case parser.current_scope
+            when :class
+              @class_block = parser.current_api_block
+            when :function
+              @function_blocks << parser.current_api_block
+            end
+            parser.reset_current_scope_and_api_block
           end
+        when line =~ /class/
+          parser.in_class = true
+        when line =~ /::response-end::/, line =~ /::request-end::/, line =~ /::output-end::/
+          parser.current_scope = :function
+        else
+          parser.parse(line)
         end
-        lineno += 1
+        
+        line_no += 1
       end
-
+      
       puts "Generated #{name}.html"
     end
-    
+
     def generate_view!(resources, temp_dir)
        @resources = resources
        @header_code = get_parsed_header unless @class_block.nil?
@@ -117,10 +93,5 @@ module RapiDoc
       return ERB.new(template).result(method_block.get_binding)
     end
 
-    private
-    # strip the '#' on the line
-    def strip_line(line)
-      line[1..line.length]
-    end
   end
 end
