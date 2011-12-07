@@ -1,7 +1,7 @@
 module RapiDoc
   # This class holds methods about a doc.
   class MethodDoc
-    attr_accessor :scope, :content, :request, :response, :code
+    attr_accessor :scope, :content, :request, :response, :code, :outputs, :variables
     
     def initialize(type)
       @scope = type
@@ -21,6 +21,7 @@ module RapiDoc
       end
 
       eval("@#{name}= \"#{value}\"")
+      self.class.class_eval { attr_accessor name.to_sym }
     end
 
     def add_output(name, value)
