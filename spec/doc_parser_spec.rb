@@ -6,6 +6,18 @@ describe RapiDoc::DocParser do
   end
 
   describe "#methods" do
+    describe "strip_line" do
+      it "should strip '#' correctly" do
+        line = '# random string'
+        @parser.strip_line(line).should eq(' random string')
+      end
+      it "should strip only one '#'" do
+        line = '## random string'
+        @parser.strip_line(line).should_not eq(' random string')
+        @parser.strip_line(line).should eq('# random string')
+      end
+    end
+
     describe "start" do
       it 'should by default generate MethodDoc with scope :class' do
         method_doc = RapiDoc::MethodDoc.new(:class)
@@ -154,7 +166,7 @@ describe RapiDoc::DocParser do
             end
           end
         end
-      end
+      end # describe 'parse'
     end
   end
 end
