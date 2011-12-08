@@ -20,7 +20,7 @@ Jeweler::Tasks.new do |gem|
   gem.summary = %Q{Rails API Doc Generator}
   gem.description = %Q{Rails API Doc Generator}
   gem.email = "hchoroomi@gmail.com"
-  gem.authors = ["Husein Choroomi"]
+  gem.authors = ["Husein Choroomi", "Adinda Praditya"]
   # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new
