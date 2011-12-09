@@ -13,7 +13,7 @@ Installation
 Usage
 =====
 
-Run `rake rapi_doc` to generate config and layout files. (TODO: Add a separate rake task to generate config files)
+Run `rake rapi_doc:setup` to generate config and layout files.
 
 Modify config file by adding your controllers, e.g.:
 
@@ -23,7 +23,7 @@ Modify config file by adding your controllers, e.g.:
 
 Then invoke the generation by calling:
 
-`rake rapi_doc`
+`rake rapi_doc:generate`
 
 Documentation Example
 ---------------------
