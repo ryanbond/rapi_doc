@@ -1,7 +1,9 @@
 module RapiDoc
   module RapiConfig
+    BASE_DIR = 'config/rapi_doc'
+    
     def config_dir
-      File.join(::Rails.root.to_s, 'config/rapi_doc')
+      File.join(::Rails.root.to_s, BASE_DIR)
     end
 
     def template_dir

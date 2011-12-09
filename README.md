@@ -1,9 +1,7 @@
 Rails API Doc Generator
 =======================
 
-RESTTful API generator...
-
-It generates a set of HTML views in the public directory. Parses the desired controllers and generates appropriate views.
+RESTTful API documentation generator for Rails. It supports Rails 2.1 and greater. It generates a set of HTML views in the public directory. Parses the desired controllers and generates appropriate views.
 
 Currently does not read routes.rb and requires manual entry of routes
 
@@ -19,9 +17,9 @@ Run `rake rapi_doc` to generate config and layout files. (TODO: Add a separate r
 
 Modify config file by adding your controllers, e.g.:
 
-    users:
-      location: "/users"
-      controller_name: "users_controller.rb"
+    books:
+      location: "/books"
+      controller_name: "books_controller.rb"
 
 Then invoke the generation by calling:
 
@@ -41,10 +39,10 @@ Documentation Example
     # output:: json
     # [
     #   { "created_at":"2011-12-05T09:46:11Z",
-    #     "description":"dudul description",
+    #     "description":"As with the last several books in the series, V Is for Vengeance was a long time in the making.",
     #     "id":1,
     #     "price":19,
-    #     "title":"dudul biography",
+    #     "title":"V is for Vengeance",
     #     "updated_at":"2011-12-05T09:46:11Z" },
     # ]
     # ::output-end::
@@ -53,8 +51,8 @@ Documentation Example
     # <books type="array">
     #   <book>
     #     <id type="integer">1</id>
-    #     <title>dudul biography</title>
-    #     <description>dudul description</description>
+    #     <title>V is for Vengeance</title>
+    #     <description>As with the last several books in the series, V Is for Vengeance was a long time in the making.</description>
     #     <price type="integer">19</price>
     #     <created-at type="datetime">2011-12-05T09:46:11Z</created-at>
     #     <updated-at type="datetime">2011-12-05T09:46:11Z</updated-at>
@@ -62,8 +60,8 @@ Documentation Example
     # </books>
     #::output-end::
     #
-    # Get a list of all users in the system with pagination.  Defaults to 10 per page
-    =end
+    # Get a list of all books in the system with pagination.  Defaults to 10 per page
+    # =end
 
     
 Layout
