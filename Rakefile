@@ -15,7 +15,7 @@ require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "rapi_doc"
-  gem.homepage = "http://github.com/hchoroomi/rapi_doc"
+  gem.homepage = "http://github.com/elc/rapi_doc"
   gem.license = "MIT"
   gem.summary = %Q{Rails API Doc Generator}
   gem.description = %Q{Rails API Doc Generator}
