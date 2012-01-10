@@ -8,7 +8,7 @@ namespace :rapi_doc do
     else
       FileUtils.mkdir(config_dir)
     end
-    %w(config_file layout_file).each do |type_file|
+    %w(config_file layout_file class_layout_file frameset_file main_file).each do |type_file|
       target_file = send(type_file, :target)
       template_file = send(type_file, :template)
       if File.exist? target_file

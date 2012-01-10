@@ -51,36 +51,19 @@
   </head>
   <body>
     <div class="content">
+      <div id="navigation">
+        <ul class="main">
+          <li><a href="/apidoc/main.html">&laquo; Back to index</a></li>
+        </ul>
+      </div>
 
-      <% if @page_type == 'index' %>
-        <div id="introduction">
-          <!-- documentation intro -->
-        </div>
+      <hr />
 
-        <h2>Resources</h2>
-        <div id="resources">
-          <ul>
-          <% @resources.each do |r| %>
-            <li>Resource:  <a href="/apidoc/<%=r.name %>.html"><%=r.resource_location %></a></li>
-          <% end %>
-          </ul>
-        </div>
-      <% else %>
-        <div id="navigation">
-          <ul class="main">
-            <li><a href="/apidoc/index.html">&laquo; Back to index</a></li>
-          </ul>
-        </div>
+      <%=@header_code %>
 
-        <hr />
-
-        <%=@header_code %>
-
-        <% @method_codes.each do |mc| %>
-          <%=mc %>
-        <% end %>
+      <% @method_codes.each do |mc| %>
+        <%=mc %>
       <% end %>
-
     </div>
   </body>
 </html>

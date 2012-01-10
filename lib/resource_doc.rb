@@ -8,7 +8,7 @@ module RapiDoc
     
     attr_reader :name, :resource_location, :controller_name, :function_blocks, :class_block
     
-    # Initializes RAPIDoc.
+    # Initializes ResourceDoc.
     def initialize(name, resource_location, controller_name, options = {})
       @name = name
       @standard_methods = options[:standard_methods] || [:put, :post, :get, :delete]
@@ -71,8 +71,10 @@ module RapiDoc
     def generate_view!(resources, temp_dir)
        @resources = resources
        @header_code = get_parsed_header unless @class_block.nil?
+       i = 1
        function_blocks.each do |mb|
-         @method_codes << get_parsed_method(mb)
+         @method_codes << get_parsed_method(mb, i)
+         i += 1
        end
        # write it to a file
        template = ""
@@ -87,7 +89,7 @@ module RapiDoc
       ERB.new(template).result(@class_block.get_binding)
     end
 
-    def get_parsed_method(method_block)
+    def get_parsed_method(method_block, method_order)
       template = ""
       File.open(File.join(File.dirname(__FILE__), '..', 'templates', '_resource_method.html.erb')).each { |line| template << line }
       return ERB.new(template).result(method_block.get_binding)
