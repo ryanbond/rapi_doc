@@ -1,4 +1,4 @@
-<div id="method_<%=@order%>">
+<div id="method_<%=@method_order%>">
   
   <%
     splitted = @method
@@ -29,13 +29,13 @@
   <% unless @outputs.empty? %>
     <ul class="tabs">
       <% @outputs.each do |output| %>
-        <li class="<%= (output == @outputs.first)? 'active' : '' %>"><a href="#<%= output.keys.first %>"><%= output.keys.first %></a></li>
+        <li class="<%= (output == @outputs.first)? 'active' : '' %>"><a href='#<%= "#{output.keys.first}_#{@method_order}" %>'><%= output.keys.first %></a></li>
       <% end %>
     </ul>
     <div class="pill-content">
       <% @outputs.each do |output| %>
         <% output_format = output.keys.first %>
-        <div class="<%= (output == @outputs.first)? 'active' : '' %>" id="<%= output_format %>">
+        <div class="<%= (output == @outputs.first)? 'active' : '' %>" id='<%= "#{output.keys.first}_#{@method_order}" %>'>
           <pre class="prettyprint" ><%= output[output_format] %></pre>
         </div>
       <% end %>

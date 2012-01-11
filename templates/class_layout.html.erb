@@ -22,7 +22,7 @@
             <% if r.function_blocks.any? %>
               <ul>
                 <% r.function_blocks.each do |method_block| %>
-                  <li><%= method_block.url %></li>
+                  <li><a href="/apidoc/<%=r.name %>.html#method_<%=method_block.method_order%>"><%= method_block.url %></li>
                 <% end %>
               </ul>
             <% end %>

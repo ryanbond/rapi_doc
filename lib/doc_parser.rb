@@ -10,9 +10,9 @@ module RapiDoc
       @in_class = false
     end
 
-    def start
+    def start(order)
       @current_scope = !in_class ? :class : :function
-      @current_api_block = MethodDoc.new(current_scope)
+      @current_api_block = MethodDoc.new(current_scope, order)
     end
 
     def reset_current_scope_and_api_block

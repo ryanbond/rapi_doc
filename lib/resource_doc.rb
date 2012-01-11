@@ -37,10 +37,11 @@ module RapiDoc
       line_no = 0
       
       parser = DocParser.new
+      order = 1
       File.open(controller_location).each do |line|
         case
         when line =~ /=begin apidoc/
-          parser.start
+          parser.start(order)
         when line =~ /=end/
           if parser.current_api_block.nil?
             puts "#{controller_location}:#{line_no} - No starttag for '=end' found"
@@ -53,6 +54,7 @@ module RapiDoc
               @function_blocks << parser.current_api_block
             end
             parser.reset_current_scope_and_api_block
+            order += 1
           end
         when line =~ /class/
           parser.in_class = true
