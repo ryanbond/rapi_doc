@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'method_doc'
 require 'doc_parser'
 
