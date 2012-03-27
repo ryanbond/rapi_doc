@@ -3,6 +3,8 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title><%= @name || 'Home' %></title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+    <script type="text/javascript" src="http://github.com/riklomas/quicksearch/raw/dev/jquery.quicksearch.js"></script>
     <base id="base_target"></base>
   </head>
   <body>
@@ -12,6 +14,16 @@
         document.body.className = 'frames'
       }
     </script>
+    <script type="text/javascript">
+      $(function() {
+        $('input#search').quicksearch('ul li', {
+          selector: 'li'
+        });
+      });
+    </script>
+    <form>
+      <input type='text' id="search" />
+    </form>
     <div class="content">
       <h2>Resources</h2>
       <div id="resources_<%=@page_type2%>">
