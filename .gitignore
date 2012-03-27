@@ -1,4 +1,5 @@
 .DS_Store
 rapidoc_sample/*
 .idea/*
+.project
 pkg

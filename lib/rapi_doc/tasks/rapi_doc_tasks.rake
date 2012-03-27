@@ -8,12 +8,12 @@ namespace :rapi_doc do
     else
       FileUtils.mkdir(config_dir)
     end
-    %w(config_file layout_file class_layout_file frameset_file main_file).each do |type_file|
-      target_file = send(type_file, :target)
-      template_file = send(type_file, :template)
+    FILE_LOCATIONS.each_key do |file_type|
+      target_file = send(file_type, :target)
       if File.exist? target_file
         puts "#{BASE_DIR}/#{File.basename(target_file)} exists"
       else
+        template_file = send(file_type, :template)
         FileUtils.cp template_file, config_dir
         puts "Generated #{BASE_DIR}/#{File.basename(template_file)}" # TODO Add instructions for users to update the config file
       end
@@ -25,13 +25,10 @@ namespace :rapi_doc do
       yml = YAML::load(File.open(config_file(:target)))
     rescue
       puts "It seems that you don't have the config files yet. Please run rake rapi_doc:setup"
-    end
-
-    # Generating documentations
-    if yml
-      resources = []
-      yml.keys.each do |key|
-        resources << RapiDoc::ResourceDoc.new(key, yml[key]["location"], yml[key]["controller_name"])
+    else
+      # Generating documentations
+      resources = yml.collect do |key, val|
+        RapiDoc::ResourceDoc.new(key, val["location"], val["controller_name"])
       end
 
       # generate the apidoc
