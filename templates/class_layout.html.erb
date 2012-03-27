@@ -3,21 +3,33 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title><%= @name || 'Home' %></title>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
-    <script type="text/javascript" src="http://github.com/riklomas/quicksearch/raw/dev/jquery.quicksearch.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
     <base id="base_target"></base>
   </head>
   <body>
     <script type="text/javascript" charset="utf-8">
-      if (window.top.frames.main) {
-        document.getElementById('base_target').target = 'main';
-        document.body.className = 'frames'
-      }
-    </script>
-    <script type="text/javascript">
-      $(function() {
-        $('input#search').quicksearch('ul li', {
-          selector: 'li'
+      $(document).ready( function () {
+        if (window.top.frames.main) {
+          document.getElementById('base_target').target = 'main';
+          document.body.className = 'frames';
+        }
+        $('input#search').keyup(function(event) {
+          if ( event.keyCode == 13 ) {
+            event.preventDefault();
+          } else {
+            var search_txt = $(this).val();
+            var search_regex = new RegExp(search_txt, 'g'); 
+            $("ul li").each ( function() {
+              var h_elem = $(this).find('a')[0];
+              var link_txt = h_elem.text;
+              var match = link_txt.match(search_regex);
+              if (match) {
+                $(this).show();
+              } else {
+                $(this).hide();
+              }
+            });
+          }
         });
       });
     </script>
