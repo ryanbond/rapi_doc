@@ -8,11 +8,7 @@
   </head>
   <body>
     <script type="text/javascript" charset="utf-8">
-      $(document).ready( function () {
-        if (window.top.frames.main) {
-          document.getElementById('base_target').target = 'main';
-          document.body.className = 'frames';
-        }
+      $(function () {
         $('input#search').keyup(function(event) {
           if ( event.keyCode == 13 ) {
             event.preventDefault();
