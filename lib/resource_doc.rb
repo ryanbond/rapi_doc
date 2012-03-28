@@ -26,7 +26,7 @@ module RapiDoc
     # returns the location of the controller that is to be parsed
     def controller_location
       # @resource_location
-      "#{::Rails.root.to_s}/app/controllers/#{controller_name}"
+      @controller_location ||= "#{::Rails.root.to_s}/app/controllers/#{controller_name}"
     end
     
     def get_binding
@@ -35,15 +35,14 @@ module RapiDoc
     
     # parse the controller
     def parse_apidoc!
-      line_no = 0
       
       parser = DocParser.new
       order = 1
-      File.open(controller_location).each do |line|
-        case
-        when line =~ /=begin apidoc/
+      File.open(controller_location).each_with_index do |line, line_no|
+        case line
+        when /=begin apidoc/
           parser.start(order)
-        when line =~ /=end/
+        when /=end/
           if parser.current_api_block.nil?
             puts "#{controller_location}:#{line_no} - No starttag for '=end' found"
             exit
@@ -57,45 +56,36 @@ module RapiDoc
             parser.reset_current_scope_and_api_block
             order += 1
           end
-        when line =~ /class/
+        when /class/
           parser.in_class = true
-        when line =~ /::response-end::/, line =~ /::request-end::/, line =~ /::output-end::/
+        when /::response-end::/, /::request-end::/, /::output-end::/
           parser.current_scope = :function
         else
           parser.parse(line)
         end
-        
-        line_no += 1
       end
-      
-      puts "Generated #{name}.html"
     end
 
-    def generate_view!(resources, temp_dir)
-       @resources = resources
-       @header_code = get_parsed_header unless @class_block.nil?
-       i = 1
-       function_blocks.each do |mb|
-         @method_codes << get_parsed_method(mb, i)
-         i += 1
-       end
-       # write it to a file
-       template = ""
-       File.open(layout_file(:target)).each { |line| template << line }
-       parsed = ERB.new(template).result(binding)
-       File.open(File.join(temp_dir, name + ".html"), 'w') { |file| file.write parsed }
+    def generate_view!(resources, tempdir)
+      @resources = resources
+      @header_code = get_parsed_header unless @class_block.nil?
+      @method_codes = function_blocks.each_with_index.collect { |mb, i| get_parsed_method(mb, i+1) }
+      # write it to a file
+      template = IO.read(config_dir(:layout_file))
+      parsed = ERB.new(template).result(binding)
+      out_file = File.join(tempdir, name + ".html")
+      File.open(out_file, 'w') { |f| f.write parsed }
+      puts "Generated #{out_file}"
     end
 
     def get_parsed_header
-      template = ""
-      File.open(File.join(File.dirname(__FILE__), '..', 'templates', '_resource_header.html.erb')).each { |line| template << line }
+      template = IO.read(template_dir('_resource_header.html.erb'))
       ERB.new(template).result(@class_block.get_binding)
     end
 
     def get_parsed_method(method_block, method_order)
-      template = ""
-      File.open(File.join(File.dirname(__FILE__), '..', 'templates', '_resource_method.html.erb')).each { |line| template << line }
-      return ERB.new(template).result(method_block.get_binding)
+      template = IO.read(template_dir('_resource_method.html.erb'))
+      ERB.new(template).result(method_block.get_binding)
     end
 
   end

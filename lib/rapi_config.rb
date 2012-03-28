@@ -1,21 +1,35 @@
 module RapiDoc
   module RapiConfig
-    BASE_DIR = 'config/rapi_doc'
-    
-    def config_dir
-      @config_dir ||= File.join(::Rails.root.to_s, BASE_DIR)
-    end
-
-    def template_dir
+    FILE_NAMES = {:config_file => 'config.yml', :layout_file => 'layout.html.erb', :class_layout_file => 'class_layout.html.erb', :frameset_file => 'frameset.html.erb', :main_file => 'main.html.erb'}
+   
+    # following helper methods return the directory location if no file type is specified or return the file location for that directory if one is supplied
+    def template_dir(f = nil)
       @template_dir ||= File.join(File.dirname(__FILE__), '/../templates')
+      form_file_name @template_dir, f
     end
-
-    FILE_LOCATIONS = {:config_file => 'config.yml', :layout_file => 'layout.html.erb', :class_layout_file => 'class_layout.html.erb', :frameset_file => 'frameset.html.erb', :main_file => 'main.html.erb'}
-    FILE_LOCATIONS.each do |file_type, file_name|
-      define_method(file_type) do |location_type|
-        dir_location = location_type == :target ? config_dir : template_dir
-        File.join(dir_location, file_name)
+     
+    def config_dir(f = nil)
+      @config_dir ||= File.join(::Rails.root.to_s, 'config/rapi_doc')
+      form_file_name @config_dir, f
+    end
+    
+    def target_dir(f = nil)
+      @target_dir ||= File.join(::Rails.root.to_s, '/public/apidoc/')
+      form_file_name @target_dir, f 
+    end
+    
+    def temp_dir(f = nil)
+      @temp_dir ||= "#{Dir.mktmpdir("apidoc")}/"
+      form_file_name @temp_dir, f 
+    end
+  
+    private
+      def form_file_name(dir, file)
+        case file
+        when NilClass then dir
+        when Symbol then File.join(dir, FILE_NAMES[file])
+        when String then File.join(dir, file)
+        end
       end
-    end
   end
 end

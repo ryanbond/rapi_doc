@@ -6,16 +6,17 @@ namespace :rapi_doc do
   desc "Generate the config files"
   task :setup do
     if File.directory?(config_dir)
-      puts "#{BASE_DIR}/#{File.basename(config_dir)} exists"
+      #puts "#{BASE_DIR}/#{File.basename(@config_dir)} exists"
     else
       mkdir config_dir
     end
-    FILE_LOCATIONS.each_key do |file_type|
-      target_file = send(file_type, :target)
+    filetypes = FILE_NAMES.keys
+    filetypes.each do |file_type|
+      target_file = config_dir(file_type)
       if File.exist? target_file
-        puts "#{BASE_DIR}/#{File.basename(target_file)} exists"
+        #puts "#{BASE_DIR}/#{File.basename(target_file)} exists"
       else
-        template_file = send(file_type, :template)
+        template_file = template_dir(file_type)
         cp template_file, config_dir
         #puts "Generated #{BASE_DIR}/#{File.basename(template_file)}"
       end
@@ -25,8 +26,9 @@ namespace :rapi_doc do
   
   desc "Generate the API Documentation"
   task :generate do
+    config_file = config_dir(:config_file)
     begin
-      yml_file = File.open(config_file(:target))
+      yml_file = File.open(config_file)
     rescue Errno::ENOENT
       puts "Please run rake rapi_doc:setup to generate config files first and then run rapi_doc::generate again"
     else
