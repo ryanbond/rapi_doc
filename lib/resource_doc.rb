@@ -29,10 +29,6 @@ module RapiDoc
       @controller_location ||= "#{::Rails.root.to_s}/app/controllers/#{controller_name}"
     end
     
-    def get_binding
-      binding
-    end
-    
     # parse the controller
     def parse_apidoc!
       
@@ -64,18 +60,15 @@ module RapiDoc
           parser.parse(line)
         end
       end
+      
+      get_parsed_output
     end
 
-    def generate_view!(resources, tempdir)
-      @resources = resources
+    def get_parsed_output
       @header_code = get_parsed_header unless @class_block.nil?
       @method_codes = function_blocks.each_with_index.collect { |mb, i| get_parsed_method(mb, i+1) }
-      # write it to a file
       template = IO.read(config_dir(:layout_file))
-      parsed = ERB.new(template).result(binding)
-      out_file = File.join(tempdir, name + ".html")
-      File.open(out_file, 'w') { |f| f.write parsed }
-      puts "Generated #{out_file}"
+      ERB.new(template).result(binding)
     end
 
     def get_parsed_header

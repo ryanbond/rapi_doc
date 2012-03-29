@@ -23,9 +23,11 @@ module RapiDoc
     # Iterates over the resources creates views for them.
     # Creates an index file
     def generate_templates!
-      @resources.each do |r|
-        r.parse_apidoc!
-        r.generate_view!(@resources, temp_dir)
+      @resources.each do |resource|
+        parsed_resource = resource.parse_apidoc!
+        out_file = File.join(temp_dir, resource.name + ".html")
+        File.open(out_file, 'w') { |f| f.write parsed_resource }
+        puts "Generated #{out_file}"
       end
       generate_index!
       copy_styles!
@@ -33,9 +35,8 @@ module RapiDoc
 
     # generate the index file for the api views
     def generate_index!
-      template = ""
       @page_type2 = 'dudul'
-      File.open(config_dir(:class_layout_file)).each { |line| template << line }
+      template = IO.read(config_dir(:class_layout_file))
       parsed = ERB.new(template).result(binding)
       File.open(temp_dir("class.html"), 'w') { |file| file.write parsed }
     end
