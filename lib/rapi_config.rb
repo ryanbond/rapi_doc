@@ -1,8 +1,15 @@
 module RapiDoc
   module RapiConfig
-    FILE_NAMES = {:config_file => 'config.yml', :layout_file => 'layout.html.erb', :class_layout_file => 'class_layout.html.erb', :frameset_file => 'frameset.html.erb', :main_file => 'main.html.erb'}
+    FILE_NAMES = {
+        :config_file => 'config.yml',
+        :layout_file => 'layout.html.erb',
+        :class_layout_file => 'class_layout.html.erb',
+        :frameset_file => 'frameset.html.erb',
+        :main_file => 'main.html.erb'
+    }
    
-    # following helper methods return the directory location if no file type is specified or return the file location for that directory if one is supplied
+    # following helper methods return the directory location if no file type is specified or return the file location
+    # for that directory if one is supplied
     def template_dir(f = nil)
       @template_dir ||= File.join(File.dirname(__FILE__), '/../templates')
       form_file_name @template_dir, f
@@ -18,18 +25,12 @@ module RapiDoc
       form_file_name @target_dir, f 
     end
     
-    def temp_dir(f = nil)
-      @temp_dir ||= "#{Dir.mktmpdir("apidoc")}/"
-      form_file_name @temp_dir, f 
-    end
-  
-    private
-      def form_file_name(dir, file)
-        case file
-        when NilClass then dir
-        when Symbol then File.join(dir, FILE_NAMES[file])
-        when String then File.join(dir, file)
-        end
+    def form_file_name(dir, file)
+      case file
+      when NilClass then dir
+      when Symbol then File.join(dir, FILE_NAMES[file])
+      when String then File.join(dir, file)
       end
+    end
   end
 end

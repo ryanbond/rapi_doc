@@ -1,53 +1,48 @@
 module RapiDoc
-  # This class holds the methods that parse the doc
-  class DocParser
-    attr_accessor :current_api_block, :current_scope, :line_no, :in_class
-
-    def initialize
-      @current_api_block = nil
-      @current_scope = :none
-      @line_no = 0
-      @in_class = false
+  module DocParser
+    # custom exception class
+    class ParsingException < Exception;
     end
-
-    def start(order)
-      @current_scope = !in_class ? :class : :function
-      @current_api_block = MethodDoc.new(current_scope, order)
-    end
-
-    def reset_current_scope_and_api_block
-      @current_api_block = nil
-      @current_scope = :none
-    end
-
-    def parse(line)
-      case current_scope
-      when :response
-        @current_api_block.response += strip_line(line)
-      when :request
-        @current_api_block.request += strip_line(line)
-      when :output
-        @current_api_block.append_output strip_line(line)
-      when :class, :function
-        if result = /(\w+)\:\:\s*(.+)/.match(line)
-          if result[1] == "response" || result[1] == "request"
-            @current_scope = result[1].to_sym
-          elsif result[1] == "output"
-            @current_scope = result[1].to_sym
-            @current_api_block.add_output(result[1], result[2])
+    # This method parses the doc
+    def DocParser.parse_controller_doc(lines)
+      current_api_block = nil
+      current_scope = :none
+      in_class = false
+      class_block = nil
+      function_blocks = []
+      order = 1
+      lines.each_with_index do |line, line_no|
+        line.gsub!(/^ *#/, '') # strip the starting '#' on the line
+        case line
+          when /=begin apidoc/
+            # if we get apidoc tag inside class definition, then they are for a method
+            current_scope = !in_class ? :class : :function
+            current_api_block = MethodDoc.new(current_scope, order)
+          when /=end/
+            if current_api_block.nil?
+              raise ParsingException, "#{line_no} - No starttag for '=end' found"
+            else
+              case current_scope
+                when :class
+                  class_block = current_api_block
+                when :function
+                  function_blocks << current_api_block
+                else
+                  raise ParsingException, "logic error: unknown current scope #{current_scope}"
+              end
+              current_api_block = nil
+              current_scope = :none
+              order += 1
+            end
+          when /class/
+            in_class = true
           else
-            @current_api_block.add_variable(result[1], result[2])
-          end
-        else
-          # add line to block
-          @current_api_block.content << strip_line(line)
+            if current_api_block # process ines only if they are apidoc comments
+              current_scope = current_api_block.process_line(line, current_scope)
+            end
         end
       end
-    end
-
-    # strip the '#' on the line
-    def strip_line(line)
-      line[1..line.length]
+      [class_block, function_blocks]
     end
   end
 end

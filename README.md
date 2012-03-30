@@ -25,6 +25,49 @@ Then invoke the generation by calling:
 
 `rake rapi_doc:generate`
 
+
+Markup Reference
+---------------------
+
+Controller methods and controllers themselves are documented by annotating them with "method markers" and
+"resource markers" enclosed in "apidoc" comments, similar to that in RDoc.
+
+  # =begin apidoc
+  ... method markers
+  # =end
+
+Method markers
+============
+
+Method markers are specified like this:
+<<method-marker-name>:: <method-marker-value>
+
+All method markers are optional.
+
+method: HTTP request type such as GET or POST
+access: access restrictions such as FREE, RESTRICTED for paid subscribers, etc
+return: list of return data-formats like [JSON|XML] and what the return data means
+param: name and type of the parameter expected
+output: output format like JSON, XML. It is recommended that it should include an example of such data.
+        Each output marker must end with ::output-end:: on a separate line.
+request: a request generating code example
+response: a response processing code example
+
+You can define your own custom method markers as well.
+They will be available as the instance variables against which the _resource_method.html.erb template
+will be evaluated.
+
+Any other information that needs to be shown in the view can be specified in the apidoc comments as well.
+It will be shown under the "Description" section for the method in the view.
+
+
+Resource markers
+============
+
+A resource, which is normally a controller object, can also be annotated with apidoc comments. The annotation syntax
+and semantics are the same as what is described in "method markers" section.
+
+
 Documentation Example
 ---------------------
 
@@ -68,6 +111,10 @@ Layout
 ------
 
 Documentation layout is located at `config/rapi_doc/layout.html.erb`.
+class_layout.html.erb defines the index frame on the left which well, indexes the APIs.
+_resource_header.html.erb displays the documentation of the resource, which is normally a controller object.
+And most importantly, _resource_method.html.erb contains the documentation of the REST APIs.
+
 
 Credit
 ======

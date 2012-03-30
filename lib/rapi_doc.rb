@@ -11,6 +11,11 @@ module RapiDoc
     include RapiConfig
     include FileUtils::Verbose # so that each mv/cp/mkdir gets printed and user is aware of what is happening
 
+    def temp_dir(f = nil)
+      @temp_dir ||= "#{Dir.mktmpdir("apidoc")}/"
+      form_file_name @temp_dir, f 
+    end
+
     # Initalize the ApiDocGenerator
     def initialize(resources)
       puts "Apidoc started..."
@@ -25,7 +30,7 @@ module RapiDoc
     def generate_templates!
       @resources.each do |resource|
         parsed_resource = resource.parse_apidoc!
-        out_file = File.join(temp_dir, resource.name + ".html")
+        out_file = temp_dir(resource.name + ".html")
         File.open(out_file, 'w') { |f| f.write parsed_resource }
         puts "Generated #{out_file}"
       end
@@ -41,6 +46,11 @@ module RapiDoc
       File.open(temp_dir("class.html"), 'w') { |file| file.write parsed }
     end
 
+    def copy_styles!
+      css_files = template_dir('*.css')
+      Dir[css_files].each { |f| cp f, temp_dir }
+    end
+
     def move_structure!
       Dir.mkdir(target_dir) if (!File.directory?(target_dir))
       # Copy the frameset and main files
@@ -49,11 +59,6 @@ module RapiDoc
       # Only want to copy over the .html files, not the .erb templates and then clean up files that are no longer needed
       html_css_files = temp_dir("*.{html,css}")
       Dir[html_css_files].each { |f| mv f, target_dir }  
-    end
-
-    def copy_styles!
-      css_files = template_dir('*.css')
-      Dir[css_files].each { |f| cp f, temp_dir }
     end
 
   end
