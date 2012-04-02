@@ -1,21 +1,20 @@
 module RapiDoc
   # This class holds methods about a doc.
   class MethodDoc
-    attr_accessor :scope, :content, :request, :response, :code, :outputs, :variables, :method_order
+    attr_accessor :scope, :method_order, :content, :request, :response, :outputs, :params
     
     def initialize(type, order)
       @scope = type
       @method_order = order
-      @params = []
-      @outputs = {}
       @content = ""
-      @code = ""
       @request = ""
       @response = ""
+      @outputs = {}
+      @params = []
     end
 
     def process_line(line, current_scope)
-      puts "In scope #{current_scope} processing: #{line}"
+      #puts "In scope #{current_scope} processing: #{line}"
       new_scope = current_scope
       case current_scope
       when :response
@@ -66,5 +65,6 @@ module RapiDoc
     def get_binding
       binding
     end
+
   end
 end

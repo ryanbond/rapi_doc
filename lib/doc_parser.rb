@@ -34,7 +34,7 @@ module RapiDoc
               current_scope = :none
               order += 1
             end
-          when /class/
+          when /class/ # keep track of whether a resource or an api is being annotated
             in_class = true
           else
             if current_api_block # process ines only if they are apidoc comments

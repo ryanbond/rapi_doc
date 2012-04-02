@@ -24,7 +24,13 @@ module RapiDoc
       @target_dir ||= File.join(::Rails.root.to_s, '/public/apidoc/')
       form_file_name @target_dir, f 
     end
-    
+
+    # WARNING! - temp_dir will return different location for different runs. Use with Caution!
+    def temp_dir(f = nil)
+      @temp_dir ||= "#{Dir.mktmpdir("apidoc")}/"
+      form_file_name @temp_dir, f
+    end
+
     def form_file_name(dir, file)
       case file
       when NilClass then dir
