@@ -11,7 +11,7 @@ module RapiDoc
     # following helper methods return the directory location if no file type is specified or return the file location
     # for that directory if one is supplied
     def template_dir(f = nil)
-      @template_dir ||= File.join(File.dirname(__FILE__), '/../templates')
+      @template_dir ||= File.join(File.dirname(__FILE__), '../templates')
       form_file_name @template_dir, f
     end
      
@@ -21,8 +21,13 @@ module RapiDoc
     end
     
     def target_dir(f = nil)
-      @target_dir ||= File.join(::Rails.root.to_s, '/public/apidoc/')
+      @target_dir ||= File.join(::Rails.root.to_s, 'public/apidoc/')
       form_file_name @target_dir, f 
+    end
+
+    def controller_dir(f = nil)
+      @controller_dir ||= File.join(::Rails.root.to_s, 'app/controllers/')
+      form_file_name @controller_dir, f
     end
 
     # WARNING! - temp_dir will return different location for different runs. Use with Caution!

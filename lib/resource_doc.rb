@@ -10,20 +10,16 @@ module RapiDoc
     attr_reader :name, :resource_location, :controller_name, :class_block, :function_blocks
 
     # Initializes ResourceDoc.
-    def initialize(name, resource_location, controller_name, options = {})
+    def initialize(name, resource_location, controller_location, options = {})
       @name = name
       @class_block = nil
       @function_blocks = []
       @method_codes = []
       @header_code = ""
       @standard_methods = options[:standard_methods] || [:put, :post, :get, :delete]
-      @resource_location, @controller_name = resource_location, controller_name
-      # @resource_location
-      @controller_location = "#{::Rails.root.to_s}/app/controllers/#{controller_name}"
-
-      unless File.exist?(@controller_location)
-        raise "Unable to find or open controller. Make sure it's set properly in config/rapidoc/config.yml File: #{controller_location}"
-      end
+      @resource_location = resource_location
+      @controller_location = controller_location
+      @controller_name = File.basename(controller_location)
     end
 
     def get_binding

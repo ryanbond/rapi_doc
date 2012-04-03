@@ -23,23 +23,28 @@ module RapiDoc
       end
     end
 
-    def get_config
-      config_file = config_dir(:config_file)
-      begin
-        yml_file = File.open(config_file)
-      rescue Errno::ENOENT
-        puts "Please run rake rapi_doc:setup to generate config files first and then run rapi_doc::generate again"
-        nil
-      else
-        yml = YAML::load(yml_file)
-        puts "Please specify controllers in config/rapi_doc/config.yml for which api documentation is to be generated and then run rapi_doc::generate again" if not yml
-        yml
+    def get_controllers!
+      #yml = get_config || []
+      #yml.collect { |key, val| ResourceDoc.new(key, val["location"], controller_dir(val["controller_name"])) }
+      controller_info = {}
+      routes = Dir.chdir(::Rails.root.to_s) { `rake routes` }
+      routes.split("\n").each do |entry|
+        method, url, controller_action = entry.split.slice(-3, 3)
+        controller, action = controller_action.split('#')
+        puts "For \"#{controller}\", found action \"#{action}\" with #{method} at \"#{url}\""
+        controller_info[controller] ||= []
+        controller_info[controller] << [action, method, url]
       end
-    end
-
-    def get_resources(yml)
-      resources = yml.collect do |key, val|
-        ResourceDoc.new(key, val["location"], val["controller_name"])
+      controller_info.map do |controller, action_entries|
+        #controller_class = controller.capitalize + 'Controller'
+        controller_location = controller_dir(controller + '_controller.rb')
+        controller_base_routes = action_entries.select do |action, method, url|
+          url.index('/', 1).nil?
+        end
+        # base urls differ only by the method [GET or POST]. So, any one will do.
+        controller_url = controller_base_routes[0][2].gsub(/\(.*\)/, '') # omit the trailing format
+        #controller_methods = controller_base_routes.map { |action, method, url| method }
+        [controller, controller_url, controller_location]
       end
     end
 
@@ -72,13 +77,23 @@ module RapiDoc
       rm_rf config_dir
     end
 
+    # Obsolete method that reads configuration from config.yml
+    def get_config
+      config_file = config_dir(:config_file)
+      begin
+        yml_file = File.open(config_file)
+        YAML::load(yml_file)
+      rescue Errno::ENOENT
+        false
+      end
+    end
+
     # Creates views for the resources
     def generate_resource_templates!(resources)
       resources.each do |resource|
         parsed_resource = resource.parse_apidoc!
         out_file = temp_dir(resource.name + ".html")
         File.open(out_file, 'w') { |f| f.write parsed_resource }
-        puts "Generated #{out_file}"
       end
     end
 
