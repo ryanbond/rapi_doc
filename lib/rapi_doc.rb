@@ -1,9 +1,9 @@
 require 'erb'
 require 'fileutils'
-require 'doc_util'
-require 'resource_doc'
-require 'rapi_config'
-require 'rapi_doc/railtie' if defined?(Rails)
+require_relative 'rapi_doc/doc_util'
+require_relative 'rapi_doc/resource_doc'
+require_relative 'rapi_doc/rapi_config'
+require_relative 'rapi_doc/railtie' if defined?(Rails)
 
 module RapiDoc
  module RAPIDoc
@@ -23,9 +23,8 @@ module RapiDoc
       end
     end
 
-    def get_controllers!
-      #yml = get_config || []
-      #yml.collect { |key, val| ResourceDoc.new(key, val["location"], controller_dir(val["controller_name"])) }
+    # Reads 'rake routes' output and gets the controller info
+    def get_controller_info!
       controller_info = {}
       routes = Dir.chdir(::Rails.root.to_s) { `rake routes` }
       routes.split("\n").each do |entry|
@@ -35,7 +34,15 @@ module RapiDoc
         controller_info[controller] ||= []
         controller_info[controller] << [action, method, url]
       end
-      controller_info.map do |controller, action_entries|
+      controller_info
+    end
+
+    def get_resources!
+      #yml = get_config || []
+      #yml.collect { |key, val| ResourceDoc.new(key, val["location"], controller_dir(val["controller_name"])) }
+      controller_info = get_controller_info!
+      resources = []
+      controller_info.each do |controller, action_entries|
         #controller_class = controller.capitalize + 'Controller'
         controller_location = controller_dir(controller + '_controller.rb')
         controller_base_routes = action_entries.select do |action, method, url|
@@ -44,8 +51,14 @@ module RapiDoc
         # base urls differ only by the method [GET or POST]. So, any one will do.
         controller_url = controller_base_routes[0][2].gsub(/\(.*\)/, '') # omit the trailing format
         #controller_methods = controller_base_routes.map { |action, method, url| method }
-        [controller, controller_url, controller_location]
+        if block_given?
+          controller_include = yield [controller, controller_url, controller_location]
+        else
+          controller_include = true
+        end
+        resources << ResourceDoc.new(controller, controller_url, controller_location) if controller_include
       end
+      resources
     end
 
     # Generates views and their index in a temp directory

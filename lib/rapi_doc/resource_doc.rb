@@ -1,6 +1,6 @@
 # encoding: utf-8
-require 'method_doc'
-require 'doc_parser'
+require_relative 'method_doc'
+require_relative 'doc_parser'
 
 module RapiDoc
   # ResourceDoc holds the information a resource contains. It parses the class header and also the 
