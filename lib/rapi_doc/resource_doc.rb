@@ -41,7 +41,7 @@ module RapiDoc
         @method_codes = @function_blocks.each_with_index.collect do |method_block, i|
           ERB.new(method_template).result(method_block.get_binding)
         end
-        template = IO.read(config_dir(:layout_file))
+        template = IO.read(config_dir(:main_file))
         ERB.new(template).result(get_binding)
       end
     end

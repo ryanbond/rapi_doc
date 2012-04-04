@@ -1,10 +1,7 @@
 module RapiDoc
   module RapiConfig
     FILE_NAMES = {
-        :config_file => 'config.yml',
-        :layout_file => 'layout.html.erb',
-        :class_layout_file => 'class_layout.html.erb',
-        :frameset_file => 'frameset.html.erb',
+        :resource_index_file => 'resource_index.html.erb',
         :main_file => 'main.html.erb'
     }
    

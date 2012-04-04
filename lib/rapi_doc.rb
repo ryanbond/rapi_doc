@@ -71,8 +71,7 @@ module RapiDoc
     # Moves the generated files in the temp directory to target directory
     def move_structure!
       Dir.mkdir(target_dir) if (!File.directory?(target_dir))
-      # Copy the frameset and main files
-      cp config_dir(:frameset_file), target_dir('index.html')
+      # Copy the main file
       cp config_dir(:main_file), target_dir('main.html')
       # Only want to move the .html and .css files, not the .erb templates.
       html_css_files = temp_dir("*.{html,css}")
@@ -90,17 +89,6 @@ module RapiDoc
       rm_rf config_dir
     end
 
-    # Obsolete method that reads configuration from config.yml
-    def get_config
-      config_file = config_dir(:config_file)
-      begin
-        yml_file = File.open(config_file)
-        YAML::load(yml_file)
-      rescue Errno::ENOENT
-        false
-      end
-    end
-
     # Creates views for the resources
     def generate_resource_templates!(resources)
       resources.each do |resource|
@@ -112,11 +100,11 @@ module RapiDoc
 
      # generate the index file for the api views
     def generate_resource_index!(resources)
-      template = IO.read(config_dir(:class_layout_file))
+      template = IO.read(config_dir(:resource_index_file))
       # evaluate this template in the context of a temp class with one instance variable - resources
       namespace = OpenStruct.new(:resources => resources)
       parsed = ERB.new(template).result(namespace.instance_eval { binding })
-      File.open(temp_dir("class.html"), 'w') { |file| file.write parsed }
+      File.open(temp_dir("resource_index.html"), 'w') { |file| file.write parsed }
     end
 
     def copy_styles!

@@ -3,8 +3,6 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title><%= @name || 'Home' %></title>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-    <base id="base_target" target="main"></base>
   </head>
   <body>
     <script type="text/javascript" charset="utf-8">
@@ -35,11 +33,13 @@
         <ul>
         <% resources.each do |resource| %>
           <li>
-            Resource:  <a href="/apidoc/<%=resource.name %>.html"><%=resource.resource_location %></a>
+            Resource:  <a href="/apidoc/<%=resource.name %>.html" target="_parent"><%=resource.resource_location %></a>
             <% if resource.function_blocks.any? %>
               <ul>
                 <% resource.function_blocks.each do |method_block| %>
-                  <li><a href="/apidoc/<%=resource.name %>.html#method_<%=method_block.method_order%>"><%= "#{method_block.method} #{method_block.url}" %></a></li>
+                  <li><a href="/apidoc/<%=resource.name %>.html#method_<%=method_block.method_order%>" target="_parent">
+                    <%= "#{method_block.method} #{method_block.url}" %></a>
+                  </li>
                 <% end %>
               </ul>
             <% end %>
