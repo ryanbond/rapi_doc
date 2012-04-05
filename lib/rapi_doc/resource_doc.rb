@@ -14,8 +14,8 @@ module RapiDoc
       @name = name
       @class_block = nil
       @function_blocks = []
-      @method_codes = []
-      @header_code = ""
+      @resource_methods = []
+      @resource_header = ""
       @standard_methods = options[:standard_methods] || [:put, :post, :get, :delete]
       @resource_location = resource_location
       @controller_location = controller_location
@@ -37,11 +37,11 @@ module RapiDoc
       else
         class_template = IO.read(template_dir('_resource_header.html.erb'))
         method_template = IO.read(template_dir('_resource_method.html.erb'))
-        @header_code = ERB.new(class_template).result(@class_block.get_binding) unless class_block.nil?
-        @method_codes = @function_blocks.each_with_index.collect do |method_block, i|
+        @resource_header = ERB.new(class_template).result(@class_block.get_binding) unless class_block.nil?
+        @resource_methods = @function_blocks.each_with_index.collect do |method_block, i|
           ERB.new(method_template).result(method_block.get_binding)
         end
-        template = IO.read(config_dir(:main_file))
+        template = IO.read(config_dir('_resource.html.erb'))
         ERB.new(template).result(get_binding)
       end
     end

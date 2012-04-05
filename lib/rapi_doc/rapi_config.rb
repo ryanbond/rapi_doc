@@ -1,10 +1,6 @@
 module RapiDoc
   module RapiConfig
-    FILE_NAMES = {
-        :resource_index_file => 'resource_index.html.erb',
-        :main_file => 'main.html.erb'
-    }
-   
+
     # following helper methods return the directory location if no file type is specified or return the file location
     # for that directory if one is supplied
     def template_dir(f = nil)
@@ -36,8 +32,8 @@ module RapiDoc
     def form_file_name(dir, file)
       case file
       when NilClass then dir
-      when Symbol then File.join(dir, FILE_NAMES[file])
       when String then File.join(dir, file)
+      else raise ArgumentError, "Invalid argument #{file}"
       end
     end
   end

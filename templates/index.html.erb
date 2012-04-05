@@ -4,15 +4,13 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link rel="stylesheet" type="text/css" href="style.css"/>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-    <title><%= @name || 'Home' %></title>
+    <title>apidoc</title>
   </head>
   <body class="main">
-    <iframe name="list" src="/apidoc/resource_index.html"></iframe>
-    <div class="content">
-      <%=@header_code %>
-
-      <% @method_codes.each do |method_code| %>
-        <%=method_code %>
+    <iframe name="list" height="100%" src="/apidoc/resource_index.html"></iframe>
+    <div id="resources">
+      <% resources.each do |resource| %>
+        <%= resource %>
       <% end %>
     </div>
   </body>

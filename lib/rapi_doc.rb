@@ -13,13 +13,9 @@ module RapiDoc
 
     def create_structure!
       File.directory?(config_dir) || mkdir(config_dir)
-      filetypes = FILE_NAMES.keys
-      filetypes.each do |file_type|
-        target_file = config_dir(file_type)
-        if not File.exist? target_file
-          template_file = template_dir(file_type)
-          cp template_file, config_dir
-        end
+      Dir["#{template_dir}/*.*"].each do |template_file|
+        target_file = config_dir(File.basename(template_file))
+        cp template_file, config_dir if not File.exist? target_file
       end
     end
 
@@ -62,19 +58,17 @@ module RapiDoc
     end
 
     # Generates views and their index in a temp directory
-    def generate_templates!(resources)
-      generate_resource_templates!(resources)
-      generate_resource_index!(resources)
+    def generate_templates!(resource_docs)
+      generate_resource_templates!(resource_docs)
+      generate_resource_index!(resource_docs)
       copy_styles!
     end
 
     # Moves the generated files in the temp directory to target directory
     def move_structure!
       Dir.mkdir(target_dir) if (!File.directory?(target_dir))
-      # Copy the main file
-      cp config_dir(:main_file), target_dir('main.html')
-      # Only want to move the .html and .css files, not the .erb templates.
-      html_css_files = temp_dir("*.{html,css}")
+      # Only want to move the .html, .css and .js files, not the .erb templates.
+      html_css_files = temp_dir("*.{html,css,js}")
       Dir[html_css_files].each { |f| mv f, target_dir }
     end
 
@@ -90,26 +84,23 @@ module RapiDoc
     end
 
     # Creates views for the resources
-    def generate_resource_templates!(resources)
-      resources.each do |resource|
-        parsed_resource = resource.parse_apidoc!
-        out_file = temp_dir(resource.name + ".html")
-        File.open(out_file, 'w') { |f| f.write parsed_resource }
-      end
+    def generate_resource_templates!(resource_docs)
+      resources = resource_docs.collect { |resource| resource.parse_apidoc! }
+      template = IO.read(config_dir('index.html.erb'))
+      parsed = ERB.new(template).result(binding) # this gets evaluated against the "resources" local variable
+      File.open(temp_dir("index.html"), 'w') { |file| file.write parsed }
     end
 
      # generate the index file for the api views
     def generate_resource_index!(resources)
-      template = IO.read(config_dir(:resource_index_file))
-      # evaluate this template in the context of a temp class with one instance variable - resources
-      namespace = OpenStruct.new(:resources => resources)
-      parsed = ERB.new(template).result(namespace.instance_eval { binding })
+      template = IO.read(config_dir('resource_index.html.erb'))
+      parsed = ERB.new(template).result(binding) # this gets evaluated against the "resources" local variable
       File.open(temp_dir("resource_index.html"), 'w') { |file| file.write parsed }
     end
 
     def copy_styles!
-      css_files = template_dir('*.css')
-      Dir[css_files].each { |f| cp f, temp_dir }
+      css_js_files = config_dir("*.{css,js}")
+      Dir[css_js_files].each { |f| cp f, temp_dir }
     end
 
   end
