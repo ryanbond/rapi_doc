@@ -6,15 +6,17 @@
     <h2>Representations</h2>
 
     <% if @json %>
-      <a name="json"></a>
-      <strong>JSON representation:</strong> <br /><a href="javascript:$('#jsonrep').toggle()">(toggle code)</a><br />
-      <textarea style="width:100%;height:200px;display:none;" id="jsonrep"><%=@json %></textarea><br />
+      <div class="json">
+        <p><strong>JSON representation:</strong></p>
+        <p><textarea><%=@json %></textarea></p>
+      </div>
     <% end %>
 
     <% if @xml %>
-      <a name="xml"></a>
-      <strong>XML representation:</strong> <br /><a href="javascript:$('#xmlrep').toggle()">(toggle code)</a><br/>
-      <textarea style="width:100%;height:200px;display:none;" id="xmlrep"><%=@xml %></textarea>
+      <div class="xml">
+        <p><strong>XML representation:</strong></p>
+        <p><textarea><%=@xml %></textarea></p>
+      </div>
     <% end %>
   <% end %>
 </div>

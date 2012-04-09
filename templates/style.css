@@ -1,6 +1,21 @@
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
 body {
     line-height: 1.5em;
-    color:#484848;
+}
+
+#resources {
+    float: right;
+}
+
+/* Horizontal menu items */
+#index {
+    float: left;
+    height: 100%;
+    position: fixed;
 }
 
 ul, ul li {
@@ -8,14 +23,11 @@ ul, ul li {
     padding: 0;
     list-style: none outside;
 }
-/* Horizontal menu items */
-#menu li {
-    position: relative;
-    float: left;
-}
 
 #menu li a {
-    padding: 4px 10px; background: #ddd; display: block;
+    padding: 4px 10px;
+    background: #ddd;
+    display: block;
 }
 
 ul, ol {
@@ -27,13 +39,15 @@ li {
     margin-right: 10px;
 }
 
-#resources {
-
-}
-
 h1, h2, h3 {
     padding-top: 8px;
     padding-bottom: 2px;
+}
+
+.resource_header textarea {
+    width:100%;
+    height:200px;
+    display:none;
 }
 
 #method {

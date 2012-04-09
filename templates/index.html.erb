@@ -7,8 +7,14 @@
     <title>apidoc</title>
   </head>
   <body class="main">
-    <iframe name="list" height="100%" src="/apidoc/resource_index.html"></iframe>
+    <iframe id="index" height="100%" src="/apidoc/resource_index.html"></iframe>
     <div id="resources">
+      <div><strong>Show</strong>
+        <ul>
+          <li><strong>XML</strong><a href="javascript:void(0)" onclick="$('.xml').toggle()"> toggle </a></li>
+          <li><strong>JSON</strong><a href="javascript:void(0)" onclick="$('.json').toggle()"> toggle </a></li>
+        </ul>
+      </div>
       <% resources.each do |resource| %>
         <%= resource %>
       <% end %>

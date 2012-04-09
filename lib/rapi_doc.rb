@@ -1,6 +1,5 @@
 require 'erb'
 require 'fileutils'
-require_relative 'rapi_doc/doc_util'
 require_relative 'rapi_doc/resource_doc'
 require_relative 'rapi_doc/rapi_config'
 require_relative 'rapi_doc/railtie' if defined?(Rails)

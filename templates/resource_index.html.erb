@@ -3,12 +3,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <base target="_parent" />
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
     <title><%= @name || 'Home' %></title>
   </head>
   <body>
     <script type="text/javascript" charset="utf-8">
       $(function () {
-        $('input#search').keyup(function(event) {
+        $('input').keyup(function(event) {
           if ( event.keyCode == 13 ) {
             event.preventDefault();
           } else {
@@ -26,29 +27,26 @@
       });
     </script>
     <form onsubmit="return false;">
-      <input type='text' id="search" />
+      <input type='text'/>
     </form>
-    <div class="content">
-      <h2>Resources</h2>
-      <div id="resource_index">
-        <ul>
-        <% resources.each do |resource| %>
-          <li>
-            Resource:  <a href="/apidoc/index.html#<%=resource.name %>"><%=resource.name %></a>
-            <% if resource.function_blocks.any? %>
-              <ul>
-                <% resource.function_blocks.each do |method_block| %>
-                  <li><a href="/apidoc/index.html#<%=resource.name%>_method_<%=method_block.method_order%>" >
-                    <%= "#{method_block.method} #{method_block.url}" %></a>
-                  </li>
-                <% end %>
-              </ul>
-            <% end %>
-          </li>
-        <% end %>
-        </ul>
-      </div>
-    
+    <h2>Resources</h2>
+    <div id="resource_index">
+      <ul>
+      <% resources.each do |resource| %>
+        <li>
+          Resource:  <a href="/apidoc/index.html#<%=resource.name %>"><%=resource.name %></a>
+          <% if resource.function_blocks.any? %>
+            <ul>
+              <% resource.function_blocks.each do |method_block| %>
+                <li><a href="/apidoc/index.html#<%=resource.name%>_method_<%=method_block.method_order%>" >
+                  <%= "#{method_block.method} #{method_block.url}" %></a>
+                </li>
+              <% end %>
+            </ul>
+          <% end %>
+        </li>
+      <% end %>
+      </ul>
     </div>
   </body>
 </html>

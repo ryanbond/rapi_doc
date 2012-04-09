@@ -3,7 +3,8 @@ module RapiDoc
   class MethodDoc
     attr_accessor :scope, :method_order, :content, :request, :response, :outputs, :params
     
-    def initialize(type, order)
+    def initialize(resource_name, type, order)
+      @resource_name = resource_name
       @scope = type
       @method_order = order
       @content = ""

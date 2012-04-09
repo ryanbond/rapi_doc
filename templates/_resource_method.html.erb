@@ -1,13 +1,8 @@
-<div class="resource_methods" id="method_<%=@method_order%>">
-  
-  <%
-    splitted = @method
-    str = @method
-    str = "<span id='http_verb'>#{str}</span>"
-  %>
-  <p class='description'><strong>Description:</strong> <%=@content %></p>
+<div class="resource_methods">
+  <a id='<%= "#{@resource_name}_method_#{@method_order}" %>'></a>
+  <p><strong>Description:</strong> <%=@content %></p>
 
-  <h2><%=str %><%=@url %></h2>
+  <h2><%=@url %></h2>
   
   <% if @access %>
     <strong>Access:</strong> <%=@access %><br />
@@ -27,14 +22,15 @@
   <% end %>
 
   <% unless @outputs.empty? %>
-    <ul class="tabs">
+    <ul class="output_format">
       <% @outputs.each do |output_format, output| %>
-        <li class="<%= (output_format == @outputs.keys.first)? 'active' : '' %>"><a href='#<%= "#{output_format}_#{@method_order}" %>'><%= output_format %></a></li>
+        <li class="<%= output_format %>"><a href='#<%= "#{@resource_name}_#{output_format}_#{@method_order}" %>'><%= output_format %></a></li>
       <% end %>
     </ul>
-    <div class="pill-content">
+    <div class="output">
       <% @outputs.each do |output_format, output| %>
-        <div class="<%= (output_format == @outputs.keys.first)? 'active' : '' %>" id='<%= "#{output_format}_#{@method_order}" %>'>
+        <div class="<%= output_format %>">
+          <a id='<%= "#{@resource_name}_#{output_format}_#{@method_order}" %>'></a>
           <pre class="prettyprint" ><%= output %></pre>
         </div>
       <% end %>
