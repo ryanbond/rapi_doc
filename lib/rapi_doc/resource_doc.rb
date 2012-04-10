@@ -9,7 +9,7 @@ module RapiDoc
   # method documentation, which will be contained in MethodDoc.
   class ResourceDoc
 
-    attr_reader :name, :resource_location, :controller_name, :class_block, :function_blocks
+    attr_reader :name, :resource_location, :controller_name, :class_block, :function_blocks, :resource_header, :resource_methods
 
     # Initializes ResourceDoc.
     def initialize(name, resource_location, controller_location, options = {})
@@ -24,12 +24,8 @@ module RapiDoc
       @controller_name = File.basename(controller_location)
     end
 
-    def get_binding
-      binding
-    end
-
     # parse the controller
-    def parse_apidoc!
+    def parse_apidoc!(class_template, method_template)
       lines = IO.readlines(@controller_location)
       begin
         @class_block, @function_blocks = ResourceDoc.parse_controller_doc(@name, lines)
@@ -37,14 +33,10 @@ module RapiDoc
         puts "error #{ex} while parsing #{@controller_location}"
         exit
       else
-        class_template = IO.read(template_dir('_resource_header.html.erb'))
-        method_template = IO.read(template_dir('_resource_method.html.erb'))
         @resource_header = ERB.new(class_template).result(@class_block.get_binding) unless class_block.nil?
         @resource_methods = @function_blocks.each_with_index.collect do |method_block, i|
           ERB.new(method_template).result(method_block.get_binding)
         end
-        template = IO.read(config_dir('_resource.html.erb'))
-        ERB.new(template).result(get_binding)
       end
     end
 

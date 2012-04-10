@@ -59,15 +59,14 @@ module RapiDoc
     # Generates views and their index in a temp directory
     def generate_templates!(resource_docs)
       generate_resource_templates!(resource_docs)
-      generate_resource_index!(resource_docs)
       copy_styles!
     end
 
     # Moves the generated files in the temp directory to target directory
     def move_structure!
       Dir.mkdir(target_dir) if (!File.directory?(target_dir))
-      # Only want to move the .html, .css and .js files, not the .erb templates.
-      html_css_files = temp_dir("*.{html,css,js}")
+      # Only want to move the .html, .css, .png and .js files, not the .erb templates.
+      html_css_files = temp_dir("*.{html,css,js,png}")
       Dir[html_css_files].each { |f| mv f, target_dir }
     end
 
@@ -84,21 +83,16 @@ module RapiDoc
 
     # Creates views for the resources
     def generate_resource_templates!(resource_docs)
-      resources = resource_docs.collect { |resource| resource.parse_apidoc! }
+      class_template = IO.read(template_dir('_resource_header.html.erb'))
+      method_template = IO.read(template_dir('_resource_method.html.erb'))
+      resource_docs.each { |resource| resource.parse_apidoc!(class_template, method_template) }
       template = IO.read(config_dir('index.html.erb'))
-      parsed = ERB.new(template).result(binding) # this gets evaluated against the "resources" local variable
+      parsed = ERB.new(template).result(binding) # this gets evaluated against the "resource_docs" local variable
       File.open(temp_dir("index.html"), 'w') { |file| file.write parsed }
     end
 
-     # generate the index file for the api views
-    def generate_resource_index!(resources)
-      template = IO.read(config_dir('resource_index.html.erb'))
-      parsed = ERB.new(template).result(binding) # this gets evaluated against the "resources" local variable
-      File.open(temp_dir("resource_index.html"), 'w') { |file| file.write parsed }
-    end
-
     def copy_styles!
-      css_js_files = config_dir("*.{css,js}")
+      css_js_files = config_dir("*.{css,js,png}")
       Dir[css_js_files].each { |f| cp f, temp_dir }
     end
 
