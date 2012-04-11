@@ -44,18 +44,19 @@ Method markers
 ============
 
 Method markers are specified like this:
-<<method-marker-name>:: <method-marker-value>
+
+    # <<method-marker-name>:: <method-marker-value>
 
 All method markers are optional.
 
-method: HTTP request type such as GET or POST
-access: access restrictions such as FREE, RESTRICTED for paid subscribers, etc
-return: list of return data-formats like [JSON|XML] and what the return data means
-param: name and type of the parameter expected
-output: output format like JSON, XML. It is recommended that it should include an example of such data.
-        Each output marker must end with ::output-end:: on a separate line.
-request: a request generating code example
-response: a response processing code example
+    # method: HTTP request type such as GET or POST
+    # access: access restrictions such as FREE, RESTRICTED for paid subscribers, etc
+    # return: list of return data-formats like [JSON|XML] and what the return data means
+    # param: name and type of the parameter expected
+    # output: output format like JSON, XML. It is recommended that it should include an example of such data.
+    #         Each output marker must end with ::output-end:: on a separate line.
+    # request: a request generating code example
+    # response: a response processing code example
 
 You can define your own custom method markers as well.
 They will be available as the instance variables against which the _resource_method.html.erb template
@@ -71,10 +72,11 @@ Resource markers
 A resource, which is normally a controller object, can also be annotated with apidoc comments. 
 
 Method markers are specified the same way as the method markers:
-<<method-marker-name>:: <method-marker-value>
 
-xml: xml representation of the resource
-json: json representation
+    # <<method-marker-name>:: <method-marker-value>
+    # 
+    # xml: xml representation of the resource
+    # json: json representation
 
 Just like in method marker, any other information that needs to be shown in the view can be specified in the apidoc comments as well.
 It will be shown under the "Description" section for the method in the view.
@@ -123,9 +125,10 @@ Documentaton Output
 ------
 
 Documentation generated is located in `public/apidoc` directory.
-index.html: contains the HTML 
-styles.css: CSS styles
-scripts.js: contains the script used to search within the documentation.
+
+    # index.html: contains the HTML 
+    # styles.css: CSS styles
+    # scripts.js: contains the script used to search within the documentation.
 
 
 Credit
