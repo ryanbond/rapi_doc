@@ -15,15 +15,19 @@ Usage
 
 Run `rake rapi_doc:setup` to generate config and layout files.
 
-Modify config file by adding your controllers, e.g.:
-
-    books:
-      location: "/books"
-      controller_name: "books_controller.rb"
-
 Then invoke the generation by calling:
 
 `rake rapi_doc:generate`
+
+It will analyze `rake routes` output and find the controller files in app/controllers directory that may have the annotation.
+It will confirm from the user whether he/she wants the plugin to look for annotations in each of these files.
+For files confirmed by the user, it will parse the annotations and generate the HTML output.
+
+`rake rapi_doc:clean`
+will remove the documentation thus generated.
+
+`rake rapi_doc:distclean`
+will remove the documentation and also the config files created by the "rapi_doc:setup"
 
 
 Markup Reference
@@ -64,8 +68,16 @@ It will be shown under the "Description" section for the method in the view.
 Resource markers
 ============
 
-A resource, which is normally a controller object, can also be annotated with apidoc comments. The annotation syntax
-and semantics are the same as what is described in "method markers" section.
+A resource, which is normally a controller object, can also be annotated with apidoc comments. 
+
+Method markers are specified the same way as the method markers:
+<<method-marker-name>:: <method-marker-value>
+
+xml: xml representation of the resource
+json: json representation
+
+Just like in method marker, any other information that needs to be shown in the view can be specified in the apidoc comments as well.
+It will be shown under the "Description" section for the method in the view.
 
 
 Documentation Example
