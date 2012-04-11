@@ -2,27 +2,9 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="stylesheet" type="text/css" href="styles.css"/>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-    <script type="text/javascript" charset="utf-8">
-      $(function () {
-        $('#resource_index input').keyup(function(event) {
-          if ( event.keyCode == 13 ) {
-            event.preventDefault();
-          } else {
-            var search_txt = $(this).val();
-            var search_regex = new RegExp(search_txt, 'g');
-            $("#resource_index ul li").each ( function() {
-              var elem = $(this)
-              var h_elem = elem.find('a')[0];
-              var link_txt = h_elem.text;
-              var match = link_txt.match(search_regex);
-              match ? elem.show() : elem.hide();
-            });
-          }
-        });
-      });
-    </script>
+    <script type="text/javascript" src="scripts.js"></script>
     <title>apidoc</title>
   </head>
   <body>
@@ -35,12 +17,12 @@
       <ul id="resource_index">
         <% resource_docs.each do |resource| %>
           <li>
-            <strong>Resource:</strong>
             <a href="#<%=resource.name %>"><%=resource.name %></a>
             <% if resource.function_blocks.any? %>
               <ul>
                 <% resource.function_blocks.each do |method_block| %>
-                  <li><a href="#<%=resource.name%>_method_<%=method_block.method_order%>" >
+                  <li>
+                    <a href="#<%=resource.name%>_method_<%=method_block.method_order%>" >
                     <%= "#{method_block.method} #{method_block.url}" %></a>
                   </li>
                 <% end %>
@@ -51,10 +33,9 @@
       </ul>
     </div>
     <div id="resources">
-      <h3>Show</h3>
       <ul>
-        <li><strong>XML</strong><a href="#" onclick="$('.xml').toggle();"> toggle </a></li>
-        <li><strong>JSON</strong><a href="#" onclick="$('.json').toggle();"> toggle </a></li>
+        <li><strong>Show XML</strong><a href="#" onclick="$('.xml').toggle();"> toggle </a></li>
+        <li><strong>Show JSON</strong><a href="#" onclick="$('.json').toggle();"> toggle </a></li>
       </ul>
       <% resource_docs.each do |resource| %>
         <a id='<%= "#{resource.name}" %>'></a>

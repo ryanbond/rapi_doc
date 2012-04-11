@@ -15,17 +15,31 @@ body {
     float: left;
     height: 100%;
     position: fixed;
-    width: 300px;
-    background-color: #dddddd;
+    width: 200px;
+    background-color: #ade;
+}
+
+#resource_index li {
+    background-color: #6699AA;
+    color:white;
+    padding: 5px 10px 0;
 }
 
 #resource_index li a {
     display: block;
+    text-decoration: none;
+    font-weight: bold;
+    color:#ffffff;
 }
 
 #resource_index form img {
     height: 25px;
     width: 25px;
+}
+
+#resources h2 {
+    background-color: #6699AA;
+    color:white;
 }
 
 ul, ul li {
