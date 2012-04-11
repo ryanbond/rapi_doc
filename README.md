@@ -27,7 +27,7 @@ For files confirmed by the user, it will parse the annotations and generate the 
 will remove the documentation thus generated.
 
 `rake rapi_doc:distclean`
-will remove the documentation and also the config files created by the "rapi_doc:setup"
+will remove the documentation and also the config files created by the `rake rapi_doc:setup`
 
 
 Markup Reference
@@ -119,13 +119,13 @@ Documentation Example
     # =end
 
     
-Layout
+Documentaton Output
 ------
 
-Documentation layout is located at `config/rapi_doc/layout.html.erb`.
-class_layout.html.erb defines the index frame on the left which well, indexes the APIs.
-_resource_header.html.erb displays the documentation of the resource, which is normally a controller object.
-And most importantly, _resource_method.html.erb contains the documentation of the REST APIs.
+Documentation generated is located in `public/apidoc` directory.
+index.html: contains the HTML 
+styles.css: CSS styles
+scripts.js: contains the script used to search within the documentation.
 
 
 Credit
