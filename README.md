@@ -126,9 +126,9 @@ Documentaton Output
 
 Documentation generated is located in `public/apidoc` directory.
 
-    # index.html: contains the HTML 
-    # styles.css: CSS styles
-    # scripts.js: contains the script used to search within the documentation.
+    index.html: contains the HTML 
+    styles.css: CSS styles
+    scripts.js: contains the script used to search within the documentation.
 
 
 Credit
