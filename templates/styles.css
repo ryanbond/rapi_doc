@@ -9,13 +9,14 @@ body {
 
 #resources {
     float: right;
+    width: 80%;
 }
 
 #resource_index {
     float: left;
     height: 100%;
     position: fixed;
-    width: 200px;
+    width: 18%;
     background-color: #ade;
 }
 
