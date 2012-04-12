@@ -18,10 +18,12 @@ Jeweler::Tasks.new do |gem|
   gem.homepage = "http://github.com/elc/rapi_doc"
   gem.license = "MIT"
   gem.summary = %Q{Rails API Doc Generator}
-  gem.description = %Q{Rails API Doc Generator}
+  gem.description = %Q{Rails API Doc Generator. Parses the apidoc annotations to generate HTML pages.}
   gem.email = "hchoroomi@gmail.com"
   gem.authors = ["Husein Choroomi", "Adinda Praditya", "Salil Wadnerkar"]
   # dependencies defined in Gemfile
+  gem.add_dependency 'haml'
+  gem.add_dependency 'rdoc'
 end
 Jeweler::RubygemsDotOrgTasks.new
 
@@ -42,8 +44,8 @@ end
 
 task :default => :test
 
-require 'rake/rdoctask'
-Rake::RDocTask.new do |rdoc|
+require 'rdoc/task'
+RDoc::Task.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'

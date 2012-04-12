@@ -33,9 +33,9 @@ module RapiDoc
         puts "error #{ex} while parsing #{@controller_location}"
         exit
       else
-        @resource_header = ERB.new(class_template).result(@class_block.get_binding) unless class_block.nil?
+        @resource_header = Haml::Engine.new(class_template).render(@class_block) unless class_block.nil?
         @resource_methods = @function_blocks.each_with_index.collect do |method_block, i|
-          ERB.new(method_template).result(method_block.get_binding)
+          Haml::Engine.new(method_template).render(method_block)
         end
       end
     end

@@ -1,4 +1,4 @@
-require 'erb'
+require 'haml'
 require 'fileutils'
 require_relative 'rapi_doc/resource_doc'
 require_relative 'rapi_doc/rapi_config'
@@ -65,7 +65,7 @@ module RapiDoc
     # Moves the generated files in the temp directory to target directory
     def move_structure!
       Dir.mkdir(target_dir) if (!File.directory?(target_dir))
-      # Only want to move the .html, .css, .png and .js files, not the .erb templates.
+      # Only want to move the .html, .css, .png and .js files, not the .haml templates.
       html_css_files = temp_dir("*.{html,css,js,png}")
       Dir[html_css_files].each { |f| mv f, target_dir }
     end
@@ -83,11 +83,11 @@ module RapiDoc
 
     # Creates views for the resources
     def generate_resource_templates!(resource_docs)
-      class_template = IO.read(template_dir('_resource_header.html.erb'))
-      method_template = IO.read(template_dir('_resource_method.html.erb'))
+      class_template = IO.read(template_dir('_resource_header.html.haml'))
+      method_template = IO.read(template_dir('_resource_method.html.haml'))
       resource_docs.each { |resource| resource.parse_apidoc!(class_template, method_template) }
-      template = IO.read(config_dir('index.html.erb'))
-      parsed = ERB.new(template).result(binding) # this gets evaluated against the "resource_docs" local variable
+      template = IO.read(config_dir('index.html.haml'))
+      parsed = Haml::Engine.new(template).render(Object.new, :resource_docs => resource_docs)
       File.open(temp_dir("index.html"), 'w') { |file| file.write parsed }
     end
 

@@ -1,0 +1,38 @@
+.resource_methods
+  %a{:id => "#{@resource_name}_method_#{@method_order}"}
+  %p
+    %strong Description:
+    = @content
+  %h2= @url
+  - if @access
+    %strong Access:
+    = @access
+    %br/
+  - if @return
+    %strong Return:
+    = @return
+    %br/
+  - if @params
+    %strong Parameters:
+    %ul
+      - @params.each do |v|
+        %li= v
+  - unless @outputs.empty?
+    %ul.output_format
+      - @outputs.each do |output_format, output|
+        %li{:class => output_format}
+          %a{:href => "##{"#{@resource_name}_#{output_format}_#{@method_order}"}"}= output_format
+    .output
+      - @outputs.each do |output_format, output|
+        %div{:class => output_format}
+          %a{:id => "#{@resource_name}_#{output_format}_#{@method_order}"}
+          %pre.prettyprint= output
+    %br/
+  - unless @request.blank?
+    %strong Request:
+    %pre.code
+      %code= @request
+  - unless @response.blank?
+    %strong Response:
+    %pre.code
+      %code= @response
