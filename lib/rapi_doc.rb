@@ -23,11 +23,17 @@ module RapiDoc
       controller_info = {}
       routes = Dir.chdir(::Rails.root.to_s) { `rake routes` }
       routes.split("\n").each do |entry|
-        method, url, controller_action = entry.split.slice(-3, 3)
-        controller, action = controller_action.split('#')
-        puts "For \"#{controller}\", found action \"#{action}\" with #{method} at \"#{url}\""
-        controller_info[controller] ||= []
-        controller_info[controller] << [action, method, url]
+        if !entry.blank?
+          entry_split = entry.split
+          idx = entry_split.index{|x| ['PUT', 'POST', 'DELETE', 'GET'].include?(x)}
+          if idx
+            method, url, controller_action = entry.split.slice(idx, 3)
+            controller, action = controller_action.split('#')
+            puts "For \"#{controller}\", found action \"#{action}\" with #{method} at \"#{url}\""
+            controller_info[controller] ||= []
+            controller_info[controller] << [action, method, url]
+          end
+        end
       end
       controller_info
     end
@@ -40,18 +46,19 @@ module RapiDoc
       controller_info.each do |controller, action_entries|
         #controller_class = controller.capitalize + 'Controller'
         controller_location = controller_dir(controller + '_controller.rb')
-        controller_base_routes = action_entries.select do |action, method, url|
-          url.index('/', 1).nil?
-        end
+        controller_base_routes = action_entries.inject({}){|x,y| x[y[0]]=y[1..-1]; x}.map(&:flatten)
+
         # base urls differ only by the method [GET or POST]. So, any one will do.
-        controller_url = controller_base_routes[0][2].gsub(/\(.*\)/, '') # omit the trailing format
-        #controller_methods = controller_base_routes.map { |action, method, url| method }
-        if block_given?
-          controller_include = yield [controller, controller_url, controller_location]
-        else
-          controller_include = true
+        if !controller_base_routes.empty?
+          controller_url = controller_base_routes[0][2].gsub(/\(.*\)/, '') # omit the trailing format
+          #controller_methods = controller_base_routes.map { |action, method, url| method }
+          if block_given?
+            controller_include = yield [controller, controller_url, controller_location]
+          else
+            controller_include = true
+          end
+          resources << ResourceDoc.new(controller, controller_url, controller_location) if controller_include
         end
-        resources << ResourceDoc.new(controller, controller_url, controller_location) if controller_include
       end
       resources
     end
